@@ -1,16 +1,15 @@
 import { Server } from "hapi";
-import { handler, options } from "./src/lib";
+import { builder, options } from "./src/lib";
 import { Options } from "./src/types";
+import packageJson from "./package.json";
 
-module.exports = {
-  pkg: require("./package.json"),
-  register: async (server: Server, opts: Options) => {
-    const { jsonPath } = options.setDefault(opts);
+export const pkg = packageJson;
+export const register = async (server: Server, opts: Options) => {
+  opts = options.setDefault(opts);
 
-    server.route({
-      method: "GET",
-      path: jsonPath,
-      handler,
-    });
-  },
+  server.route({
+    method: "GET",
+    path: opts.jsonPath,
+    handler: (request) => builder(request, opts),
+  });
 };
