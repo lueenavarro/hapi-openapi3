@@ -1,0 +1,15 @@
+{
+  "name": "hapi-openapi3",
+  "version": "1.0.0",
+  "description": "Generate OpenAPI 3.0.0 for Hapi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Louie Navarro",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/hapi": "^18.0.5",
+    "typescript": "^4.3.5"
+  }
+}
