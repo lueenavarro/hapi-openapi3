@@ -27,13 +27,18 @@ export const getParameters = (validators: RouteOptionsValidate) => {
   return parameters;
 };
 
-const mapParameters = (joiSchema: Schema, paramIn: string) =>
-  Object.entries(joiSchema.describe().keys).map(([key, subDescription]) => ({
-    in: paramIn,
-    name: key,
-    schema: traverseSchema(subDescription, {}),
-    required: isRequired(subDescription),
-  }));
+const mapParameters = (joiSchema: Schema, paramIn: string) => {
+  if (joiSchema.type !== "object") throw new Error("Invalid Schema");
+
+  return Object.entries(joiSchema.describe().keys).map(
+    ([key, subDescription]) => ({
+      in: paramIn,
+      name: key,
+      schema: traverseSchema(subDescription, {}),
+      required: isRequired(subDescription),
+    })
+  );
+};
 
 export const getRequestBody = (validators: RouteOptionsValidate) => {
   const schema = validators.payload
@@ -47,6 +52,7 @@ const traverseSchema = (joiDescription: Description, apiSchema: any) => {
     if (joiDescription.type === "object") {
       apiSchema.type = joiDescription.type;
       apiSchema.properties = {};
+      parseRules(joiDescription, apiSchema);
       for (let [key, subDescription] of Object.entries(joiDescription.keys)) {
         if (isRequired(subDescription)) {
           apiSchema.required = apiSchema.required || [];
@@ -56,6 +62,7 @@ const traverseSchema = (joiDescription: Description, apiSchema: any) => {
       }
     } else if (joiDescription.type === "array") {
       apiSchema.type = joiDescription.type;
+      parseRules(joiDescription, apiSchema);
       for (let subDescription of joiDescription.items) {
         apiSchema.items = traverseSchema(subDescription, {});
       }
@@ -68,16 +75,11 @@ const traverseSchema = (joiDescription: Description, apiSchema: any) => {
 };
 
 const parseFinalSchema = (joiDescription: Description, apiSchema: any) => {
-  // open api 3 does not have date type
   apiSchema.type = joiDescription.type;
+  // open api 3 does not have date type
   if (joiDescription.type === "date") parseDate(joiDescription, apiSchema);
-  if (joiDescription.rules) parseRules(joiDescription, apiSchema);
-
-  const hasEnum =
-    joiDescription.allow && (joiDescription.flags as Record<string, any>)?.only;
-  if (hasEnum) {
-    apiSchema.enum = joiDescription.allow;
-  }
+  parseRules(joiDescription, apiSchema);
+  parseEnums(joiDescription, apiSchema);
 };
 
 const parseDate = (joiDescription: Description, apiSchema: any) => {
@@ -94,27 +96,48 @@ const parseDate = (joiDescription: Description, apiSchema: any) => {
 };
 
 const parseRules = (joiDescription: Description, apiSchema: any) => {
+  if (!apiSchema.type) throw new Error("ApiSchema type not defined");
+  if (!joiDescription.rules) return;
+
   const rulesMap = mapRules(joiDescription.rules);
-  const pattern = rulesMap["pattern"];
-  if (pattern) apiSchema.pattern = pattern.args.regex;
-  const min = rulesMap["min"];
-  if (min) {
-    if (apiSchema.type === "string") apiSchema.minLength = min.args.limit;
-    if (apiSchema.type === "number") apiSchema.min = min.args.limit;
+  const patterRule = rulesMap["pattern"];
+  if (patterRule) apiSchema.pattern = patterRule.args.regex;
+  const minRule = rulesMap["min"];
+  if (minRule) {
+    if (apiSchema.type === "string") apiSchema.minLength = minRule.args.limit;
+    else if (apiSchema.type === "number") apiSchema.min = minRule.args.limit;
+    else if (apiSchema.type === "array")
+      apiSchema.minItems = minRule.args.limit;
+    else if (apiSchema.type === "object")
+      apiSchema.minProperties = minRule.args.limit;
   }
-  const max = rulesMap["max"];
-  if (max) {
-    if (apiSchema.type === "string") apiSchema.maxLength = max.args.limit;
-    if (apiSchema.type === "number") apiSchema.max = max.args.limit;
+  const maxRule = rulesMap["max"];
+  if (maxRule) {
+    if (apiSchema.type === "string") apiSchema.maxLength = maxRule.args.limit;
+    else if (apiSchema.type === "number") apiSchema.max = maxRule.args.limit;
+    else if (apiSchema.type === "array")
+      apiSchema.maxItems = maxRule.args.limit;
+    else if (apiSchema.type === "object")
+      apiSchema.maxProperties = maxRule.args.limit;
   }
 };
 
-const mapRules = (rules: GetRuleOptions[]) => {
+const mapRules = (rules: GetRuleOptions[]): Record<string, any> => {
   let rulesMap = {};
-  rules.forEach((rule: GetRuleOptions) => {
-    rulesMap[rule.name] = rule;
-  });
+  if (rules) {
+    rules.forEach((rule: GetRuleOptions) => {
+      rulesMap[rule.name] = rule;
+    });
+  }
   return rulesMap;
+};
+
+const parseEnums = (joiDescription: Description, apiSchema: any) => {
+  const hasEnum =
+    joiDescription.allow && (joiDescription.flags as Record<string, any>)?.only;
+  if (!hasEnum) return;
+
+  apiSchema.enum = joiDescription.allow;
 };
 
 const isRequired = (joiDescription: Description) => {

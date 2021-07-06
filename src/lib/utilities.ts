@@ -11,6 +11,11 @@ const getProp = (
   return object === undefined ? defaultVal : object;
 };
 
+const isEmpty = (object: any) => {
+  return Object.keys(object).length === 0;
+};
+
 export default {
   getProp,
+  isEmpty,
 };
