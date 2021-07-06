@@ -1,6 +1,6 @@
 import { RequestRoute, Server } from "hapi";
 
-import { getParametersSchema } from "./schema";
+import schema from "./schema";
 
 const defaultResponse = {
   200: {
@@ -17,12 +17,18 @@ const getPaths = (
     .table()
     .filter(includeFn)
     .forEach((route) => {
+      const validate = route.settings.validate;
       if (!paths[route.path]) {
         paths[route.path] = {
           [route.method]: {
             description: route.settings.description,
             operationId: route.settings.id,
-            parameters: getParametersSchema(route.settings.validate),
+            ...((validate.headers || validate.query || validate.params) && {
+              parameters: schema.getParameters(validate),
+            }),
+            ...(validate.payload && {
+              requestBody: schema.getRequestBody(validate),
+            }),
             responses: defaultResponse,
           },
         };

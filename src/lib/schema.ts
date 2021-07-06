@@ -1,49 +1,99 @@
 import { RouteOptionsValidate } from "hapi";
 import { Description, Schema } from "joi";
 
-import util from "./utilities";
+import utils from "./utilities";
 
-export const getParametersSchema = (validators: RouteOptionsValidate) => {
-  const schemas: any[] = [];
+export const getParameters = (validators: RouteOptionsValidate) => {
+  const parameters: any[] = [];
 
   if (validators.headers) {
     const description = (validators.headers as Schema).describe();
-    traverseParameter(description, schemas, null, "header");
+    traverseParameters(description, parameters, null, "header");
   }
 
   if (validators.query) {
     const description = (validators.query as Schema).describe();
-    traverseParameter(description, schemas, null, "query");
+    traverseParameters(description, parameters, null, "query");
   }
 
   if (validators.params) {
     const description = (validators.params as Schema).describe();
-    traverseParameter(description, schemas, null, "params");
+    traverseParameters(description, parameters, null, "params");
   }
 
-  return schemas;
+  return parameters;
 };
 
-const traverseParameter = (
+const traverseParameters = (
   description: Description,
-  schemas: any[],
-  key: string,
+  parameters: any[],
+  descKey: string,
   paramIn: string
 ) => {
   if (!description.keys) {
-    schemas.push({
+    parameters.push({
       in: paramIn,
-      name: key,
-      schema: {
-        type: description.type,
-      },
-      required: util.getProp(description, "flags.presence") === "required",
+      name: descKey,
+      schema: traverseSchema(description, {}),
+      required: isRequired(description),
     });
     return;
   }
 
-  const descriptionKeys = Object.keys(description.keys);
-  descriptionKeys.forEach((descKey) => {
-    traverseParameter(description.keys[descKey], schemas, descKey, paramIn);
+  Object.keys(description.keys).forEach((key) => {
+    traverseParameters(description.keys[key], parameters, key, paramIn);
   });
+};
+
+export const getRequestBody = (validators: RouteOptionsValidate) => {
+  const schema = validators.payload
+    ? traverseSchema((validators.payload as Schema).describe(), {})
+    : {};
+  return { content: { "application/json": { schema } } };
+};
+
+const traverseSchema = (description: Description, apiSchema: any) => {
+  try {
+    if (description.keys) {
+      apiSchema.type = "object";
+      apiSchema.properties = {};
+      for (let [key, childDescription] of Object.entries(description.keys)) {
+        if (isRequired(childDescription)) {
+          apiSchema.required = apiSchema.required || [];
+          apiSchema.required.push(key);
+        }
+        apiSchema.properties[key] = traverseSchema(childDescription, {});
+      }
+      return apiSchema;
+    } else if (description.items) {
+      apiSchema.type = "array";
+      for (let anotherDescription of description.items) {
+        apiSchema.items = traverseSchema(anotherDescription, {});
+      }
+      return apiSchema;
+    }
+
+    defineFinalSchema(description, apiSchema);
+    return apiSchema;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const defineFinalSchema = (description: Description, apiSchema: any) => {
+  if (description.type === "date") {
+    apiSchema.type = "string";
+    apiSchema.format = "date-time";
+    return;
+  }
+  apiSchema.type = description.type;
+};
+
+const isRequired = (description: Description) => {
+  return utils.getProp(description, "flags.presence") === "required";
+};
+
+export default {
+  getParameters,
+  getRequestBody,
 };
