@@ -4,7 +4,7 @@
   "description": "Generate OpenAPI 3.0.0 for Hapi",
   "scripts": {
     "build": "webpack --mode production",
-    "build:watch": "tsc -w",
+    "build:watch": "webpack --mode production --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Louie Navarro",
