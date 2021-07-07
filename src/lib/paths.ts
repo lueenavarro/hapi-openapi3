@@ -17,24 +17,17 @@ const getPaths = (
     .table()
     .filter(includeFn)
     .forEach((route) => {
-      const validate = route.settings.validate;
-      if (!paths[route.path]) {
-        paths[route.path] = {
-          [route.method]: {
-            description: route.settings.description,
-            operationId: route.settings.id,
-            ...((validate.headers || validate.query || validate.params) && {
-              parameters: fields.getParameters(validate),
-            }),
-            ...(validate.payload && {
-              requestBody: fields.getRequestBody(validate),
-            }),
-            responses: defaultResponse,
-          },
+      const settings = route.settings;
+      if (settings) {
+        paths[route.path] = paths[route.path] || {};
+        paths[route.path][route.method] = {
+          description: settings.description,
+          parameters: fields.getParameters(settings.validate),
+          requestBody: fields.getRequestBody(settings.validate),
+          responses: fields.getResponseBody(settings) || defaultResponse,
         };
       }
     });
-
   return paths;
 };
 

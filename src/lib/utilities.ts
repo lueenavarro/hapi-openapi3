@@ -15,7 +15,11 @@ const isEmpty = (object: any) => {
   return Object.keys(object).length === 0;
 };
 
+const mapObject = (obj: any, fn: Function) =>
+  Object.fromEntries(Object.entries(obj).map(([k, v], i) => [k, fn(v, k, i)]));
+
 export default {
   getProp,
   isEmpty,
+  mapObject,
 };
