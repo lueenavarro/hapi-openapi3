@@ -1,51 +1,6 @@
-import { RouteOptionsValidate } from "hapi";
-import { Description, GetRuleOptions, Schema } from "joi";
+import { Description, GetRuleOptions } from "joi";
 
 import util from "./utilities";
-
-export const getParameters = (validators: RouteOptionsValidate) => {
-  let parameters: any[] = [];
-
-  if (validators.headers) {
-    parameters = parameters.concat(
-      mapParameters(validators.headers as Schema, "header")
-    );
-  }
-
-  if (validators.query) {
-    parameters = parameters.concat(
-      mapParameters(validators.query as Schema, "query")
-    );
-  }
-
-  if (validators.params) {
-    parameters = parameters.concat(
-      mapParameters(validators.params as Schema, "params")
-    );
-  }
-
-  return parameters;
-};
-
-const mapParameters = (joiSchema: Schema, paramIn: string) => {
-  if (joiSchema.type !== "object") throw new Error("Invalid Schema");
-
-  return Object.entries(joiSchema.describe().keys).map(
-    ([key, subDescription]) => ({
-      in: paramIn,
-      name: key,
-      schema: traverseSchema(subDescription, {}),
-      required: isRequired(subDescription),
-    })
-  );
-};
-
-export const getRequestBody = (validators: RouteOptionsValidate) => {
-  const schema = validators.payload
-    ? traverseSchema((validators.payload as Schema).describe(), {})
-    : {};
-  return { content: { "application/json": { schema } } };
-};
 
 const traverseSchema = (joiDescription: Description, apiSchema: any) => {
   try {
@@ -80,6 +35,7 @@ const parseFinalSchema = (joiDescription: Description, apiSchema: any) => {
   if (joiDescription.type === "date") parseDate(joiDescription, apiSchema);
   parseRules(joiDescription, apiSchema);
   parseEnums(joiDescription, apiSchema);
+  parseNullable(joiDescription, apiSchema);
 };
 
 const parseDate = (joiDescription: Description, apiSchema: any) => {
@@ -137,7 +93,13 @@ const parseEnums = (joiDescription: Description, apiSchema: any) => {
     joiDescription.allow && (joiDescription.flags as Record<string, any>)?.only;
   if (!hasEnum) return;
 
-  apiSchema.enum = joiDescription.allow;
+  apiSchema.enum = joiDescription.allow.filter(
+    (item: any) => !(item === null || item === "")
+  );
+};
+
+const parseNullable = (joiDescription: Description, apiSchema: any) => {
+  if (joiDescription.allow?.includes(null)) apiSchema.nullable = true;
 };
 
 const isRequired = (joiDescription: Description) => {
@@ -145,6 +107,10 @@ const isRequired = (joiDescription: Description) => {
 };
 
 export default {
-  getParameters,
-  getRequestBody,
+  isRequired,
+  parseDate,
+  parseEnums,
+  parseRules,
+  parseNullable,
+  traverseSchema,
 };

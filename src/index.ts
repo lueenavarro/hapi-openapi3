@@ -1,9 +1,14 @@
 import { Server } from "hapi";
-import { builder, options } from "./src/lib";
-import { Options } from "./src/types";
-import packageJson from "./package.json";
+import { builder, options } from "./lib";
+import { Options } from "./types";
+import { name, version, description } from "../package.json";
 
-export const pkg = packageJson;
+export const pkg = {
+  name,
+  version,
+  description,
+};
+
 export const register = async (server: Server, opts: Options) => {
   opts = options.setDefault(opts);
 

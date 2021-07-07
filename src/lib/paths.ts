@@ -1,6 +1,6 @@
 import { RequestRoute, Server } from "hapi";
 
-import schema from "./schema";
+import fields from "./fields";
 
 const defaultResponse = {
   200: {
@@ -24,10 +24,10 @@ const getPaths = (
             description: route.settings.description,
             operationId: route.settings.id,
             ...((validate.headers || validate.query || validate.params) && {
-              parameters: schema.getParameters(validate),
+              parameters: fields.getParameters(validate),
             }),
             ...(validate.payload && {
-              requestBody: schema.getRequestBody(validate),
+              requestBody: fields.getRequestBody(validate),
             }),
             responses: defaultResponse,
           },
