@@ -66,7 +66,7 @@ const mapHapiResponseStatus = (
   for (let [code, joiSchema] of Object.entries(hapiResponse.status)) {
     validateResponseOptions(hapiResponse, customResponse, code);
 
-    const customResponseOptions = _.getProp(customResponse, ["status", code]);
+    const customResponseOptions = _.get(customResponse, ["status", code]);
 
     response[code] = {
       description: status(code),
@@ -161,12 +161,12 @@ const validateResponseOptions = (
 
   const result = validator.validate({
     response: {
-      schema: _.getProp(hapiResponse, "schema") ?? undefined,
-      status: _.getProp(hapiResponse, ["status", statusCode]) ?? undefined,
+      schema: _.get(hapiResponse, "schema") ?? undefined,
+      status: _.get(hapiResponse, ["status", statusCode]) ?? undefined,
     },
     customResponse: {
-      schema: _.getProp(customResponse, "schema") ?? undefined,
-      status: _.getProp(customResponse, ["status", statusCode]) ?? undefined,
+      schema: _.get(customResponse, "schema") ?? undefined,
+      status: _.get(customResponse, ["status", statusCode]) ?? undefined,
     },
   });
 

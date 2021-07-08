@@ -105,7 +105,7 @@ const parseNullable = (joiDescription: Description, apiSchema: any) => {
 };
 
 const isRequired = (joiDescription: Description) => {
-  return _.getProp(joiDescription, "flags.presence") === "required";
+  return _.get(joiDescription, "flags.presence") === "required";
 };
 
 export default {

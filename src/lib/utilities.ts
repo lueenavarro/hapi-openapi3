@@ -1,4 +1,4 @@
-const getProp = (
+const get = (
   object: any,
   keys: string[] | string,
   defaultVal?: string
@@ -6,7 +6,7 @@ const getProp = (
   keys = Array.isArray(keys) ? keys : keys.split(".");
   object = object[keys[0]];
   if (object && keys.length > 1) {
-    return getProp(object, keys.slice(1), defaultVal);
+    return get(object, keys.slice(1), defaultVal);
   }
 
   return object === undefined ? defaultVal : object;
@@ -20,7 +20,7 @@ const mapObject = (obj: any, fn: Function) =>
   Object.fromEntries(Object.entries(obj).map(([k, v], i) => [k, fn(v, k, i)]));
 
 export default {
-  getProp,
+  get,
   isEmpty,
   mapObject,
 };
