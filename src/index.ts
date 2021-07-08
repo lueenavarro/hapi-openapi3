@@ -1,8 +1,8 @@
 import { Server } from "hapi";
-import { builder, options } from "./src/lib";
-import { ServerPluginOptions } from "./src/types";
+import { builder, options } from "./lib";
+import { ServerPluginOptions } from "./types";
 
-import { name, version, description } from "./package.json";
+import { name, version, description } from "../package.json";
 
 export const pkg = {
   name,

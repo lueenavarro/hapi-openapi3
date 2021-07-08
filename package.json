@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Generate OpenAPI 3.0.0 for Hapi",
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc -w",
+    "build": "webpack --mode production",
+    "build:watch": "webpack --mode development --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "main": "dist/index.js",
   "author": "Louie Navarro",
   "license": "ISC",
   "devDependencies": {
