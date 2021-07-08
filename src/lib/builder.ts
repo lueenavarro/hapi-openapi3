@@ -7,7 +7,7 @@ const builder = (request: Request, options: ServerPluginOptions) => {
     openapi: "3.0.0",
     info: options.info,
     servers: options.servers || [{ url: getUrl(request) }],
-    paths: paths.getPaths(request.server, options.includeFn),
+    paths: paths.getPaths(request.server, options),
   };
 };
 
