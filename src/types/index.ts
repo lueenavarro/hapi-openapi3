@@ -1,3 +1,3 @@
-import Options from "./options";
+import { ServerPluginOptions, RoutePluginOptions } from "./options";
 
-export { Options };
+export { ServerPluginOptions, RoutePluginOptions };

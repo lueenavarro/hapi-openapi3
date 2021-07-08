@@ -1,6 +1,8 @@
 import { RequestRoute, Server } from "hapi";
 
-import fields from "./fields";
+import parameters from "./parameters";
+import requestBody from "./requestBody";
+import response from "./response";
 
 const defaultResponse = {
   200: {
@@ -22,9 +24,9 @@ const getPaths = (
         paths[route.path] = paths[route.path] || {};
         paths[route.path][route.method] = {
           description: settings.description,
-          parameters: fields.getParameters(settings.validate),
-          requestBody: fields.getRequestBody(settings.validate),
-          responses: fields.getResponseBody(settings) || defaultResponse,
+          parameters: parameters.get(settings.validate),
+          requestBody: requestBody.get(settings.validate),
+          responses: response.get(settings) || defaultResponse,
         };
       }
     });

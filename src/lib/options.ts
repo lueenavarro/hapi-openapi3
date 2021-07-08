@@ -1,6 +1,6 @@
-import { Options } from "../types";
+import { ServerPluginOptions } from "../types";
 
-const setDefault = (options: Options): Options => {
+const setDefault = (options: ServerPluginOptions): ServerPluginOptions => {
   return {
     jsonPath: "/openapi.json",
     pathPrefixSize: 1,

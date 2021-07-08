@@ -1,7 +1,8 @@
 import { Server } from "hapi";
-import { builder, options } from "./lib";
-import { Options } from "./types";
-import { name, version, description } from "../package.json";
+import { builder, options } from "./src/lib";
+import { ServerPluginOptions } from "./src/types";
+
+import { name, version, description } from "./package.json";
 
 export const pkg = {
   name,
@@ -9,7 +10,7 @@ export const pkg = {
   description,
 };
 
-export const register = async (server: Server, opts: Options) => {
+export const register = async (server: Server, opts: ServerPluginOptions) => {
   opts = options.setDefault(opts);
 
   server.route({

@@ -1,8 +1,8 @@
 import { Request } from "hapi";
-import { Options } from "../types";
+import { ServerPluginOptions } from "../types";
 import paths from "./paths";
 
-const builder = (request: Request, options: Options) => {
+const builder = (request: Request, options: ServerPluginOptions) => {
   return {
     openapi: "3.0.0",
     info: options.info,

@@ -3,6 +3,8 @@ import { Description, GetRuleOptions } from "joi";
 import util from "./utilities";
 
 const traverseSchema = (joiDescription: Description, apiSchema: any) => {
+  if (!joiDescription) return undefined;
+
   try {
     if (joiDescription.type === "object") {
       apiSchema.type = joiDescription.type;
