@@ -2,7 +2,11 @@
   "name": "@lueenavarro/hapi-openapi3",
   "version": "1.0.0",
   "description": "Generate OpenAPI 3.0.0 for Hapi",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
+    "prepare": "webpack --mode production",
     "build": "webpack --mode production",
     "build:watch": "webpack --mode development --watch --devtool eval-source-map",
     "test": "echo \"Error: no test specified\" && exit 1"
