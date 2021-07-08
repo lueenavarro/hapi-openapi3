@@ -1,5 +1,5 @@
 {
-  "name": "hapi-openapi3",
+  "name": "@lueenavarro/hapi-openapi3",
   "version": "1.0.0",
   "description": "Generate OpenAPI 3.0.0 for Hapi",
   "scripts": {
