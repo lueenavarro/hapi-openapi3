@@ -4,10 +4,10 @@ import status from "statuses";
 import { RoutePluginOptions } from "../types";
 
 import schema from "./schema";
-import util from "./utilities";
+import _ from "./utilities";
 
 const mapExamples = (examples: any) =>
-  util.mapObject(examples, (example: any) => ({
+  _.mapObject(examples, (example: any) => ({
     value: example,
   }));
 
@@ -23,7 +23,7 @@ export const get = (routeOptions: RouteOptions) => {
   } else if (customResponse.schema) {
     return mapResponseSchema(hapiResponse, customResponse, true);
   } else if (customResponse.status) {
-    return mapCustomResponseStatus(customResponse);
+    return mapCustomResponseStatus(hapiResponse, customResponse);
   }
 
   return undefined;
@@ -66,7 +66,8 @@ const mapHapiResponseStatus = (
   for (let [code, joiSchema] of Object.entries(hapiResponse.status)) {
     validateResponseOptions(hapiResponse, customResponse, code);
 
-    const customResponseOptions = customResponse.status[code];
+    const customResponseOptions = _.getProp(customResponse, ["status", code]);
+
     response[code] = {
       description: status(code),
       content: {
@@ -81,16 +82,17 @@ const mapHapiResponseStatus = (
     };
   }
 
-  if (util.isEmpty(response)) return undefined;
+  if (_.isEmpty(response)) return undefined;
   return response;
 };
 
 const mapCustomResponseStatus = (
+  hapiResponse: RouteOptionsResponse,
   customResponse: RoutePluginOptions["responses"]
 ) => {
   const response = {};
   for (let [code, options] of Object.entries(customResponse.status)) {
-    validateResponseOptions(null, customResponse, code);
+    validateResponseOptions(hapiResponse, customResponse, code);
 
     response[code] = {
       description: options.description || status(code),
@@ -104,7 +106,7 @@ const mapCustomResponseStatus = (
     };
   }
 
-  if (util.isEmpty(response)) return undefined;
+  if (_.isEmpty(response)) return undefined;
   return response;
 };
 
@@ -159,12 +161,12 @@ const validateResponseOptions = (
 
   const result = validator.validate({
     response: {
-      schema: hapiResponse.schema ?? undefined,
-      status: hapiResponse.status[statusCode] ?? undefined,
+      schema: _.getProp(hapiResponse, "schema") ?? undefined,
+      status: _.getProp(hapiResponse, ["status", statusCode]) ?? undefined,
     },
     customResponse: {
-      schema: customResponse.schema ?? undefined,
-      status: customResponse.status[statusCode] ?? undefined,
+      schema: _.getProp(customResponse, "schema") ?? undefined,
+      status: _.getProp(customResponse, ["status", statusCode]) ?? undefined,
     },
   });
 

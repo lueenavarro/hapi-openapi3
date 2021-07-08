@@ -1,6 +1,6 @@
 import { Description, GetRuleOptions } from "joi";
 
-import util from "./utilities";
+import _ from "./utilities";
 
 const traverseSchema = (joiDescription: Description, apiSchema: any) => {
   if (!joiDescription) return undefined;
@@ -105,7 +105,7 @@ const parseNullable = (joiDescription: Description, apiSchema: any) => {
 };
 
 const isRequired = (joiDescription: Description) => {
-  return util.getProp(joiDescription, "flags.presence") === "required";
+  return _.getProp(joiDescription, "flags.presence") === "required";
 };
 
 export default {
