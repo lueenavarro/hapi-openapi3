@@ -1,7 +1,7 @@
 import { RequestRoute } from "hapi";
 import { Schema } from "joi";
 
-interface Info {
+export interface Info {
   title: string;
   description?: string;
   version?: string;
@@ -17,7 +17,7 @@ interface Info {
   };
 }
 
-interface Server {
+export interface Server {
   url: string;
   description?: string;
 }
@@ -30,7 +30,7 @@ export interface ServerPluginOptions {
   includeFn: (route: RequestRoute) => boolean;
 }
 
-interface ResponseOptions {
+export interface ResponseOptions {
   schema?: Schema;
   description?: string;
   example?: any;
