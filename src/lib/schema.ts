@@ -6,22 +6,28 @@ const traverseSchema = (joiDescription: Description, apiSchema: any) => {
   if (!joiDescription) return undefined;
 
   try {
+    joiDescription.type =
+      extendTypeName(joiDescription.type) || joiDescription.type;
+
     if (joiDescription.type === "object") {
       apiSchema.type = joiDescription.type;
       apiSchema.properties = {};
+      parseObject(joiDescription, apiSchema);
       parseRules(joiDescription, apiSchema);
-      for (let [key, subDescription] of Object.entries(joiDescription.keys)) {
-        if (isRequired(subDescription)) {
-          apiSchema.required = apiSchema.required || [];
-          apiSchema.required.push(key);
-        }
-        apiSchema.properties[key] = traverseSchema(subDescription, {});
-      }
     } else if (joiDescription.type === "array") {
       apiSchema.type = joiDescription.type;
+      parseArray(joiDescription, apiSchema);
       parseRules(joiDescription, apiSchema);
-      for (let subDescription of joiDescription.items) {
-        apiSchema.items = traverseSchema(subDescription, {});
+    } else if (joiDescription.type === "alternatives") {
+      for (let match of joiDescription.matches) {
+        if (match.is) {
+          apiSchema.oneOf = apiSchema.oneOf || [];
+          apiSchema.oneOf.push(traverseSchema(match.then, {}));
+          apiSchema.oneOf.push(traverseSchema(match.otherwise, {}));
+        } else if (match.schema) {
+          apiSchema.anyOf = apiSchema.anyOf || [];
+          apiSchema.anyOf.push(traverseSchema(match.schema, {}));
+        }
       }
     } else parseFinalSchema(joiDescription, apiSchema);
 
@@ -31,10 +37,33 @@ const traverseSchema = (joiDescription: Description, apiSchema: any) => {
   }
 };
 
+const parseArray = (joiDescription: Description, apiSchema: any) => {
+  for (let subDescription of joiDescription.items) {
+    apiSchema.items = traverseSchema(subDescription, {});
+  }
+};
+
+const parseObject = (joiDescription: Description, apiSchema: any) => {
+  for (let [key, subDescription] of Object.entries(joiDescription.keys)) {
+    if (isRequired(subDescription)) {
+      apiSchema.required = apiSchema.required || [];
+      apiSchema.required.push(key);
+    }
+    apiSchema.properties[key] = traverseSchema(subDescription, {});
+  }
+};
+
 const parseFinalSchema = (joiDescription: Description, apiSchema: any) => {
-  apiSchema.type = joiDescription.type;
-  // open api 3 does not have date type
-  if (joiDescription.type === "date") parseDate(joiDescription, apiSchema);
+  if (["string", "boolean", "number"].includes(joiDescription.type)) {
+    apiSchema.type = joiDescription.type;
+  } else if (joiDescription.type === "date") {
+    // open api 3 does not have date type
+    parseDate(joiDescription, apiSchema);
+  } else if (["link", "symbol", "binary"].includes(joiDescription.type)) {
+    apiSchema.type = "string";
+    apiSchema.format = joiDescription.type;
+  }
+
   parseRules(joiDescription, apiSchema);
   parseEnums(joiDescription, apiSchema);
   parseNullable(joiDescription, apiSchema);
@@ -54,7 +83,7 @@ const parseDate = (joiDescription: Description, apiSchema: any) => {
 };
 
 const parseRules = (joiDescription: Description, apiSchema: any) => {
-  if (!apiSchema.type) throw new Error("ApiSchema type not defined");
+  if (!apiSchema.type) return;
   if (!joiDescription.rules) return;
 
   const rulesMap = mapRules(joiDescription.rules);
@@ -63,7 +92,8 @@ const parseRules = (joiDescription: Description, apiSchema: any) => {
   const minRule = rulesMap["min"];
   if (minRule) {
     if (apiSchema.type === "string") apiSchema.minLength = minRule.args.limit;
-    else if (apiSchema.type === "number") apiSchema.min = minRule.args.limit;
+    else if (apiSchema.type === "number")
+      apiSchema.minimum = minRule.args.limit;
     else if (apiSchema.type === "array")
       apiSchema.minItems = minRule.args.limit;
     else if (apiSchema.type === "object")
@@ -72,7 +102,8 @@ const parseRules = (joiDescription: Description, apiSchema: any) => {
   const maxRule = rulesMap["max"];
   if (maxRule) {
     if (apiSchema.type === "string") apiSchema.maxLength = maxRule.args.limit;
-    else if (apiSchema.type === "number") apiSchema.max = maxRule.args.limit;
+    else if (apiSchema.type === "number")
+      apiSchema.maximum = maxRule.args.limit;
     else if (apiSchema.type === "array")
       apiSchema.maxItems = maxRule.args.limit;
     else if (apiSchema.type === "object")
@@ -102,6 +133,15 @@ const parseEnums = (joiDescription: Description, apiSchema: any) => {
 
 const parseNullable = (joiDescription: Description, apiSchema: any) => {
   if (joiDescription.allow?.includes(null)) apiSchema.nullable = true;
+};
+
+const extendTypeName = (type: string) => {
+  const shortcutsMap = {
+    bool: "boolean",
+    func: "function",
+    alt: "alternatives",
+  };
+  if (shortcutsMap[type]) return shortcutsMap[type];
 };
 
 const isRequired = (joiDescription: Description) => {
