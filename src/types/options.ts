@@ -17,14 +17,14 @@ export interface Info {
   };
 }
 
-export interface Server {
+export interface ServersURL {
   url: string;
   description?: string;
 }
 
 export interface ServerPluginOptions {
   info?: Info;
-  servers?: Server[];
+  servers?: ServersURL[];
   jsonPath?: string;
   pathPrefixSize?: number;
   includeFn: (route: RequestRoute) => boolean;

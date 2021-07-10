@@ -12,7 +12,7 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": ["node_modules/@types/"],
-    "types": ["node"],
+    "types": ["node", "mocha"],
     "resolveJsonModule": true,
     "esModuleInterop": true
   }
