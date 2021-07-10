@@ -2,7 +2,7 @@ import { Description, GetRuleOptions } from "joi";
 
 import _ from "./utilities";
 
-const traverseSchema = (joiDescription: Description, apiSchema: any) => {
+const traverseSchema = (joiDescription: Description, apiSchema: any = {}) => {
   if (!joiDescription) return undefined;
 
   try {
@@ -21,10 +21,10 @@ const traverseSchema = (joiDescription: Description, apiSchema: any) => {
     } else if (joiDescription.type === "alternatives") {
       for (let match of joiDescription.matches) {
         apiSchema.anyOf = apiSchema.anyOf || [];
-        match.then && apiSchema.anyOf.push(traverseSchema(match.then, {}));
+        match.then && apiSchema.anyOf.push(traverseSchema(match.then));
         match.otherwise &&
-          apiSchema.anyOf.push(traverseSchema(match.otherwise, {}));
-        match.schema && apiSchema.anyOf.push(traverseSchema(match.schema, {}));
+          apiSchema.anyOf.push(traverseSchema(match.otherwise));
+        match.schema && apiSchema.anyOf.push(traverseSchema(match.schema));
       }
     } else parseFinalSchema(joiDescription, apiSchema);
 
@@ -36,7 +36,7 @@ const traverseSchema = (joiDescription: Description, apiSchema: any) => {
 
 const parseArray = (joiDescription: Description, apiSchema: any) => {
   for (let subDescription of joiDescription.items) {
-    apiSchema.items = traverseSchema(subDescription, {});
+    apiSchema.items = traverseSchema(subDescription);
   }
 };
 
@@ -46,7 +46,7 @@ const parseObject = (joiDescription: Description, apiSchema: any) => {
       apiSchema.required = apiSchema.required || [];
       apiSchema.required.push(key);
     }
-    apiSchema.properties[key] = traverseSchema(subDescription, {});
+    apiSchema.properties[key] = traverseSchema(subDescription);
   }
 };
 

@@ -40,8 +40,7 @@ const mapResponseSchema = (
   const responseSchema = schema.traverseSchema(
     useCustom
       ? customResponse.schema.schema?.describe()
-      : (hapiResponse.schema as Schema).describe(),
-    {}
+      : (hapiResponse.schema as Schema).describe()
   );
 
   if (!responseSchema) return undefined;
@@ -72,7 +71,7 @@ const mapHapiResponseStatus = (
       description: status(code),
       content: {
         "application/json": {
-          schema: schema.traverseSchema((joiSchema as Schema).describe(), {}),
+          schema: schema.traverseSchema((joiSchema as Schema).describe()),
           example: customResponseOptions?.example,
           examples:
             customResponseOptions?.examples &&
@@ -98,7 +97,7 @@ const mapCustomResponseStatus = (
       description: options.description || status(code),
       content: {
         "application/json": {
-          schema: schema.traverseSchema(options.schema?.describe(), {}),
+          schema: schema.traverseSchema(options.schema?.describe()),
           example: options.example,
           examples: options.examples && mapExamples(options.examples),
         },

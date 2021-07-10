@@ -22,7 +22,7 @@ const mapParameters = (joiDescription: Description, paramIn: string) => {
     return Object.entries(joiDescription.keys).map(([key, subDescription]) => ({
       in: getIn(paramIn),
       name: key,
-      schema: schema.traverseSchema(subDescription, {}),
+      schema: schema.traverseSchema(subDescription),
       required: schema.isRequired(subDescription),
     }));
   } else if (joiDescription.type === "alternatives") {
