@@ -1,5 +1,7 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
+const DtsBundleWebpack = require("dts-bundle-webpack");
+const pkg = require("./package.json");
 
 module.exports = {
   entry: "./src/index.ts",
@@ -17,6 +19,15 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".js"],
   },
+  plugins: [
+    new DtsBundleWebpack({
+      name: pkg.name,
+      main: "dist/src/index.d.ts",
+      baseDir: "dist",
+      out: "bundle.d.ts",
+      outputAsModuleFolder: true,
+    }),
+  ],
   output: {
     filename: "bundle.js",
     sourceMapFilename: "bundle.js.map",
