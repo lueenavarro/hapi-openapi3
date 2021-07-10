@@ -1,4 +1,5 @@
 import { expect } from "chai";
+
 import options from "./options";
 
 describe("options.ts", () => {

@@ -21,7 +21,7 @@ describe("builder.ts", () => {
         includeFn: () => true,
       };
 
-      sinon.stub(paths, "get").resolves([]);
+      sinon.stub(paths, "get").returns([]);
 
       const result = builder(mockRequest, mockOptions);
 
@@ -57,7 +57,7 @@ describe("builder.ts", () => {
         },
       };
 
-      sinon.stub(paths, "getPaths").resolves([]);
+      sinon.stub(paths, "get").returns([]);
 
       const result = builder(mockRequest, {} as any);
 

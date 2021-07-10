@@ -8,7 +8,7 @@ export const get = (validators: RouteOptionsValidate) => {
   const parameters = [
     ...mapParameters(describeSchema(validators.headers), "header"),
     ...mapParameters(describeSchema(validators.query), "query"),
-    ...mapParameters(describeSchema(validators.params), "params"),
+    ...mapParameters(describeSchema(validators.params), "path"),
   ];
 
   if (parameters.length === 0) return undefined;
@@ -20,9 +20,9 @@ const mapParameters = (joiDescription: Description, paramIn: string) => {
   if (!joiDescription) return [];
   if (joiDescription.type === "object") {
     return Object.entries(joiDescription.keys).map(([key, subDescription]) => ({
-      in: getIn(paramIn),
+      in: paramIn,
       name: key,
-      schema: schema.traverseSchema(subDescription),
+      schema: schema.traverse(subDescription),
       required: schema.isRequired(subDescription),
     }));
   } else if (joiDescription.type === "alternatives") {
@@ -64,11 +64,7 @@ const mapParameters = (joiDescription: Description, paramIn: string) => {
       })
       .filter((param) => param);
   }
-};
-
-const getIn = (paramIn: string) => {
-  if (paramIn === "params") return "path";
-  return paramIn;
+  return [];
 };
 
 const describeSchema = (sch: any) => {

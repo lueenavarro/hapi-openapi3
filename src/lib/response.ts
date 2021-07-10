@@ -37,7 +37,7 @@ const mapResponseSchema = (
   validateResponseOptions(hapiResponse, customResponse);
 
   const defaultStatusCode = 200;
-  const responseSchema = schema.traverseSchema(
+  const responseSchema = schema.traverse(
     useCustom
       ? customResponse.schema.schema?.describe()
       : (hapiResponse.schema as Schema).describe()
@@ -71,7 +71,7 @@ const mapHapiResponseStatus = (
       description: status(code),
       content: {
         "application/json": {
-          schema: schema.traverseSchema((joiSchema as Schema).describe()),
+          schema: schema.traverse((joiSchema as Schema).describe()),
           example: customResponseOptions?.example,
           examples:
             customResponseOptions?.examples &&
@@ -97,7 +97,7 @@ const mapCustomResponseStatus = (
       description: options.description || status(code),
       content: {
         "application/json": {
-          schema: schema.traverseSchema(options.schema?.describe()),
+          schema: schema.traverse(options.schema?.describe()),
           example: options.example,
           examples: options.examples && mapExamples(options.examples),
         },
