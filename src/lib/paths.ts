@@ -17,17 +17,21 @@ const get = (server: Server, options: ServerPluginOptions) => {
     .table()
     .filter(options.includeFn)
     .forEach((route) => {
-      const settings = route.settings;
       paths[route.path] = paths[route.path] || {};
-      if (settings) {
-        paths[route.path][route.method] = {
-          description: settings.description,
-          tags: [getTag(route, options)],
-          parameters: parameters.get(settings.validate),
-          requestBody: requestBody.get(settings.validate),
-          responses: response.get(settings) || defaultResponse,
-        };
-      }
+
+      const routeTags = {
+        tags: [getTag(route, options)],
+        responses: defaultResponse,
+      };
+      const settings = route.settings;
+      const routeDetails = settings && {
+        description: settings.description,
+        parameters: parameters.get(settings.validate),
+        requestBody: requestBody.get(settings.validate),
+        responses: response.get(settings),
+      };
+
+      paths[route.path][route.method] = { ...routeTags, ...routeDetails };
     });
   return paths;
 };
