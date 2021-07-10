@@ -9,7 +9,6 @@ describe("builder.ts", () => {
 
   describe("builder", () => {
     it("should add options to builder results", () => {
-      sinon.stub(paths, "getPaths").resolves([]);
       const mockRequest: any = {
         server: {},
       };
@@ -21,6 +20,8 @@ describe("builder.ts", () => {
         servers: [],
         includeFn: () => true,
       };
+
+      sinon.stub(paths, "get").resolves([]);
 
       const result = builder(mockRequest, mockOptions);
 
@@ -38,7 +39,7 @@ describe("builder.ts", () => {
         },
       };
 
-      sinon.stub(paths, "getPaths").resolves([]);
+      sinon.stub(paths, "get").resolves([]);
 
       const result = builder(mockRequest, {} as any);
 

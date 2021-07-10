@@ -11,7 +11,7 @@ const defaultResponse = {
   },
 };
 
-const getPaths = (server: Server, options: ServerPluginOptions) => {
+const get = (server: Server, options: ServerPluginOptions) => {
   const paths = {};
   server
     .table()
@@ -39,5 +39,5 @@ const getTag = (route: RequestRoute, options: ServerPluginOptions) => {
 };
 
 export default {
-  getPaths,
+  get,
 };
