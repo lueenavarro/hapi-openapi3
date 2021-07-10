@@ -7,7 +7,7 @@ import requestBody from "./requestBody";
 import response from "./response";
 import Joi from "joi";
 
-describe.only("paths.ts", () => {
+describe("paths.ts", () => {
   beforeEach(() => sinon.restore());
 
   describe("get", () => {

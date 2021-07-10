@@ -1,8 +1,4 @@
-const get = (
-  object: any,
-  keys: string[] | string,
-  defaultVal?: string
-): any => {
+const get = (object: any, keys: string[] | string, defaultVal?: any): any => {
   keys = Array.isArray(keys) ? keys : keys.split(".");
   object = object[keys[0]];
   if (object && keys.length > 1) {
