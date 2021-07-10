@@ -25,7 +25,6 @@ module.exports = {
       main: "dist/src/index.d.ts",
       baseDir: "dist",
       out: "bundle.d.ts",
-      outputAsModuleFolder: true,
     }),
   ],
   output: {
