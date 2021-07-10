@@ -1,6 +1,7 @@
 import { Description, GetRuleOptions } from "joi";
 
 import _ from "./utilities";
+import merge from "lodash.merge";
 
 const traverseSchema = (joiDescription: Description, apiSchema: any) => {
   if (!joiDescription) return undefined;
@@ -20,14 +21,9 @@ const traverseSchema = (joiDescription: Description, apiSchema: any) => {
       parseRules(joiDescription, apiSchema);
     } else if (joiDescription.type === "alternatives") {
       for (let match of joiDescription.matches) {
-        if (match.is) {
-          apiSchema.oneOf = apiSchema.oneOf || [];
-          apiSchema.oneOf.push(traverseSchema(match.then, {}));
-          apiSchema.oneOf.push(traverseSchema(match.otherwise, {}));
-        } else if (match.schema) {
-          apiSchema.anyOf = apiSchema.anyOf || [];
-          apiSchema.anyOf.push(traverseSchema(match.schema, {}));
-        }
+        apiSchema.anyOf = apiSchema.anyOf || [];
+        apiSchema.anyOf.push(traverseSchema(match.then, {}));
+        apiSchema.anyOf.push(traverseSchema(match.otherwise, {}));
       }
     } else parseFinalSchema(joiDescription, apiSchema);
 
