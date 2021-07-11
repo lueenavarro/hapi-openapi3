@@ -34,18 +34,22 @@ const traverse = (joiDescription: Description, apiSchema: any = {}) => {
 };
 
 const parseArray = (joiDescription: Description, apiSchema: any) => {
-  for (let subDescription of joiDescription.items) {
-    apiSchema.items = traverse(subDescription);
+  if (joiDescription.items) {
+    for (let subDescription of joiDescription.items) {
+      apiSchema.items = traverse(subDescription);
+    }
   }
 };
 
 const parseObject = (joiDescription: Description, apiSchema: any) => {
-  for (let [key, subDescription] of Object.entries(joiDescription.keys)) {
-    if (isRequired(subDescription)) {
-      apiSchema.required = apiSchema.required || [];
-      apiSchema.required.push(key);
+  if (joiDescription.keys) {
+    for (let [key, subDescription] of Object.entries(joiDescription.keys)) {
+      if (isRequired(subDescription)) {
+        apiSchema.required = apiSchema.required || [];
+        apiSchema.required.push(key);
+      }
+      apiSchema.properties[key] = traverse(subDescription);
     }
-    apiSchema.properties[key] = traverse(subDescription);
   }
 };
 

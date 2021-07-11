@@ -89,46 +89,54 @@ describe("schema.ts", () => {
         type: "string",
         enum: ["x", "y"],
       });
+    });
 
-      it("should parse other types of string", () => {
-        const mockLink = Joi.link().describe();
-        const mockSymbol = Joi.symbol().describe();
-        const mockBinary = Joi.binary().describe();
+    it("should parse other types of string", () => {
+      const mockLink = Joi.link().describe();
+      const mockSymbol = Joi.symbol().describe();
+      const mockBinary = Joi.binary().describe();
 
-        expect(schema.traverse(mockLink).type).to.equal("string");
-        expect(schema.traverse(mockSymbol)).to.equal("string");
-        expect(schema.traverse(mockBinary).type).to.equal("string");
-      });
+      const linkResult = schema.traverse(mockLink);
+      const symbolResult = schema.traverse(mockSymbol);
+      const binaryResult = schema.traverse(mockBinary);
 
-      it("should parse other types of string", () => {
-        const mockLink = Joi.link().describe();
-        const mockSymbol = Joi.symbol().describe();
-        const mockBinary = Joi.binary().describe();
-
-        const linkResult = schema.traverse(mockLink);
-        const symbolResult = schema.traverse(mockSymbol);
-        const binaryResult = schema.traverse(mockBinary);
-
-        expect(linkResult.type).to.equal("string");
-        expect(linkResult.format).to.equal("link");
-        expect(symbolResult.type).to.equal("string");
-        expect(binaryResult.format).to.equal("symbol");
-        expect(symbolResult.type).to.equal("string");
-        expect(binaryResult.format).to.equal("binary");
-      });
+      expect(linkResult.type).to.equal("string");
+      expect(linkResult.format).to.equal("link");
+      expect(symbolResult.type).to.equal("string");
+      expect(symbolResult.format).to.equal("symbol");
+      expect(binaryResult.type).to.equal("string");
+      expect(binaryResult.format).to.equal("binary");
     });
 
     it("should parse rules", () => {
-      const mockMin = Joi.string().min(2).describe();
-      const mockMax = Joi.number().max(3).describe();
+      const mockMinStr = Joi.string().min(2).describe();
+      const mockMinArr = Joi.array().min(2).describe();
+      const mockMinNum = Joi.number().min(2).describe();
+      const mockMinObj = Joi.object().min(2).describe();
+      const mockMaxStr = Joi.string().max(3).describe();
+      const mockMaxArr = Joi.array().max(3).describe();
+      const mockMaxNum = Joi.number().max(3).describe();
+      const mockMaxObj = Joi.object().max(3).describe();
       const mockPattern = Joi.string().pattern(/.+/).describe();
 
-      const minResult = schema.traverse(mockMin);
-      const maxResult = schema.traverse(mockMax);
+      const minStrResult = schema.traverse(mockMinStr);
+      const minArrResult = schema.traverse(mockMinArr);
+      const minNumResult = schema.traverse(mockMinNum);
+      const minObjResult = schema.traverse(mockMinObj);
+      const maxStrResult = schema.traverse(mockMaxStr);
+      const maxArrResult = schema.traverse(mockMaxArr);
+      const maxNumResult = schema.traverse(mockMaxNum);
+      const maxObjResult = schema.traverse(mockMaxObj);
       const patternResult = schema.traverse(mockPattern);
 
-      expect(minResult.minLength).to.equal(2);
-      expect(maxResult.maximum).to.equal(3);
+      expect(minStrResult.minLength).to.equal(2);
+      expect(minArrResult.minItems).to.equal(2);
+      expect(minNumResult.minimum).to.equal(2);
+      expect(minObjResult.minProperties).to.equal(2);
+      expect(maxStrResult.maxLength).to.equal(3);
+      expect(maxArrResult.maxItems).to.equal(3);
+      expect(maxNumResult.maximum).to.equal(3);
+      expect(maxObjResult.maxProperties).to.equal(3);
       expect(patternResult.pattern).to.equal("/.+/");
     });
 
@@ -146,6 +154,10 @@ describe("schema.ts", () => {
         { type: "string", format: "date-time" },
         { type: "string" },
       ]);
+    });
+
+    it("should return undefined", () => {
+      expect(schema.traverse(null)).to.equal(undefined);
     });
 
     it("should return undefined", () => {

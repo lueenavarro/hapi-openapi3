@@ -22,5 +22,11 @@ describe("requestBody.ts", () => {
         content: { "application/json": { schema: { type: "object" } } },
       });
     });
+
+    it("should return undefined", () => {
+      const mockValidators = {};
+      const result = requestBody.get(mockValidators);
+      expect(result).to.be.undefined;
+    });
   });
 });
