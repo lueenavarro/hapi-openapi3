@@ -112,10 +112,10 @@ info:
 
 server:
 
-| field         | description     | default | required |
-| ------------- | --------------- | ------- | -------- |
-| `url`         | Server URL      |         | true     |
-| `description` | Project Version |         | false    |
+| field         | description     | type   | default      | required |
+| ------------- | --------------- | ------ | ------------ | -------- |
+| `url`         | Server URL      | string | <server_url> | true     |
+| `description` | Project Version | string |              | false    |
 
 responseOptions:
 
