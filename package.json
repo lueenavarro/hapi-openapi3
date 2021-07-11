@@ -14,7 +14,10 @@
     "url": "https://github.com/lueenavarro/hapi-openapi3.git"
   },
   "scripts": {
-    "prepare": "webpack --mode production",
+    "publish": "npm publish --access public",
+    "publish:beta": "npm publish --access public --tag beta",
+    "publish:alpha": "npm publish --access public --tag alpha",
+    "prepare": "npm run build",
     "build": "webpack --mode production",
     "build:watch": "webpack --mode development --watch --devtool eval-source-map",
     "test": "ts-mocha src/**/*.spec.ts",
