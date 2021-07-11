@@ -1,6 +1,8 @@
 # Hapi OpenAPI 3
 
-Generate OpenAPI 3 for Hapi. Inspired by hapi-swagger. Validator should be Joi.
+Generates OpenAPI 3 for Hapi.
+Validator should be Joi.
+Inspired by hapi-swagger.
 
 ## Installation
 
