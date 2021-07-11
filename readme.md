@@ -55,21 +55,21 @@ Then open `/openapi.json`
 
 ### Server Plugin Options
 
-- `jsonPath` - Path to open api 3 json definition - type: string - default: /openapi.json
-- `pathPrefixSize` - selects what segment of the URL path is used to group endpoints - type: number - default: 1
-- `includeFn` - function that determines if route will be included in open api definition - type: (route: RequestRoute) => boolean - required: true
-- `info` - info about the project - type: [info](#info)
-- `servers` - array of server URL - type: [server](#server)[]
+- `jsonPath` - Path to open api 3 json definition (type: string, default: /openapi.json)
+- `pathPrefixSize` - selects what segment of the URL path is used to group endpoints (type: number, default: 1)
+- `includeFn` - function that determines if route will be included in open api definition (type: (route: RequestRoute) => boolean, required: true)
+- `info` - info about the project (type: [info](#info))
+- `servers` - array of server URL (type: [server](#server)[])
 
 ### Route Options
 
 See [examples](./examples/route-options.md)
 
-- `options.validate` - used by this plugin to define headers, params, query and payload schema - type: Hapi.RouteOptionsValidate
-- `options.response.schema` - Schema of response, status code defaults to 200 - type: Joi.Schema
-- `options.response.status` - schema of response per status code - type: object<string, Joi.schema>
-- `options.plugins["hapi-openapi3"].response.schema` - You can add examples here. You can also add your schema here - type: [responseOptions](#responseOptions)
-- `options.plugins["hapi-openapi3"].response.status` - You can add examples here per status code. You can also add your schema here - type: object<string, [responseOptions](#responseOptions)>
+- `options.validate` - used by this plugin to define headers, params, query and payload schema (type: Hapi.RouteOptionsValidate)
+- `options.response.schema` - Schema of response, status code defaults to 200 (type: Joi.Schema)
+- `options.response.status` - schema of response per status code (type: object<string, Joi.schema>)
+- `options.plugins["hapi-openapi3"].response.schema` - You can add examples here. You can also add your schema here (type: [responseOptions](#responseOptions))
+- `options.plugins["hapi-openapi3"].response.status` - You can add examples here per status code. You can also add your schema here (type: object<string, [responseOptions](#responseOptions)>)
 
 ### References:
 
