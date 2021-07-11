@@ -95,7 +95,7 @@ See [examples](./examples/route-options.md)
 
 ### References:
 
-<h3 id="info">info:</h3>
+<h4 id="info">info:</h4>
 
 | field            | description              | type   | default            | required |
 | ---------------- | ------------------------ | ------ | ------------------ | -------- |
@@ -110,14 +110,14 @@ See [examples](./examples/route-options.md)
 | `license.email`  | License Name             | string |                    | false    |
 | `license.url`    | License URL              | string |                    | false    |
 
-<h3 id="server">server:</h3>
+<h4 id="server">server:</h4>
 
 | field         | description     | type   | default      | required |
 | ------------- | --------------- | ------ | ------------ | -------- |
 | `url`         | Server URL      | string | <server_url> | true     |
 | `description` | Project Version | string |              | false    |
 
-<h3 id="responseOptions">responseOptions:</h3>
+<h4 id="responseOptions">responseOptions:</h4>
 
 | option     | description       | type                  | default | required |
 | ---------- | ----------------- | --------------------- | ------- | -------- |
