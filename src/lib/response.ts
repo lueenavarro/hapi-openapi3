@@ -13,8 +13,8 @@ const mapExamples = (examples: any) =>
 
 export const get = (routeOptions: RouteOptions) => {
   const hapiResponse: RouteOptionsResponse = routeOptions.response ?? {};
-  const pluginResponse: RoutePluginOptions["responses"] =
-    routeOptions.plugins?.["hapi-openapi3"]?.responses ?? {};
+  const pluginResponse: RoutePluginOptions["response"] =
+    routeOptions.plugins?.["hapi-openapi3"]?.response ?? {};
 
   validateResponseOptions(hapiResponse, pluginResponse);
 
@@ -33,7 +33,7 @@ export const get = (routeOptions: RouteOptions) => {
 
 const mapResponseSchema = (
   hapiResponse: RouteOptionsResponse,
-  pluginResponse: RoutePluginOptions["responses"],
+  pluginResponse: RoutePluginOptions["response"],
   useCustom: boolean
 ) => {
   const defaultStatusCode = 200;
@@ -59,7 +59,7 @@ const mapResponseSchema = (
 
 const mapHapiResponseStatus = (
   hapiResponse: RouteOptionsResponse,
-  pluginResponse: RoutePluginOptions["responses"]
+  pluginResponse: RoutePluginOptions["response"]
 ) => {
   const response = {};
   for (let [code, joiSchema] of Object.entries(hapiResponse.status)) {
@@ -84,7 +84,7 @@ const mapHapiResponseStatus = (
 };
 
 const mapCustomResponseStatus = (
-  pluginResponse: RoutePluginOptions["responses"]
+  pluginResponse: RoutePluginOptions["response"]
 ) => {
   const response = {};
   for (let [code, options] of Object.entries(pluginResponse.status)) {
@@ -106,7 +106,7 @@ const mapCustomResponseStatus = (
 
 const validateResponseOptions = (
   hapiResponse: RouteOptionsResponse,
-  pluginResponse: RoutePluginOptions["responses"]
+  pluginResponse: RoutePluginOptions["response"]
 ) => {
   const options = {
     response: {

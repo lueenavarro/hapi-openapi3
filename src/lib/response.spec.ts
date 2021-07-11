@@ -16,7 +16,7 @@ describe("response.ts", () => {
         },
         plugins: {
           "hapi-openapi3": {
-            responses: {
+            response: {
               schema: {
                 example: {},
               },
@@ -36,7 +36,7 @@ describe("response.ts", () => {
       const mockRouteOption: any = {
         plugins: {
           "hapi-openapi3": {
-            responses: {
+            response: {
               schema: {
                 schema: Joi.object(),
                 example: {},
@@ -62,7 +62,7 @@ describe("response.ts", () => {
         },
         plugins: {
           "hapi-openapi3": {
-            responses: {
+            response: {
               status: {
                 201: {
                   examples: {
@@ -88,7 +88,7 @@ describe("response.ts", () => {
       const mockRouteOption: any = {
         plugins: {
           "hapi-openapi3": {
-            responses: {
+            response: {
               status: {
                 201: {
                   schema: Joi.object(),
@@ -118,7 +118,7 @@ describe("response.ts", () => {
         },
         plugins: {
           "hapi-openapi3": {
-            responses: {
+            response: {
               schema: {
                 schema: Joi.object(),
                 example: {},
@@ -142,7 +142,7 @@ describe("response.ts", () => {
       const mockRouteOption: any = {
         plugins: {
           "hapi-openapi3": {
-            responses: {
+            response: {
               schema: {
                 schema: Joi.object(),
               },
@@ -175,7 +175,7 @@ describe("response.ts", () => {
         },
         plugins: {
           "hapi-openapi3": {
-            responses: {
+            response: {
               status: {
                 201: {
                   schema: Joi.number(),

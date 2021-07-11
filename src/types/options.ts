@@ -38,7 +38,7 @@ export interface ResponseOptions {
 }
 
 export interface RoutePluginOptions {
-  responses?: {
+  response?: {
     schema?: ResponseOptions;
     status?: Record<string, ResponseOptions>;
   };
