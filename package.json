@@ -10,6 +10,7 @@
     "build": "webpack --mode production",
     "build:watch": "webpack --mode development --watch --devtool eval-source-map",
     "test": "ts-mocha src/**/*.spec.ts",
+    "test:watch": "npm run test -- --watch",
     "coverage": "nyc --reporter=lcov npm run test"
   },
   "types": "dist/bundle.d.ts",
@@ -41,7 +42,7 @@
     "statuses": "^2.0.1"
   },
   "nyc": {
-    "include": "src", 
+    "include": "src",
     "exclude": "src/**/*.spec.ts"
   }
 }

@@ -29,7 +29,7 @@ const traverse = (joiDescription: Description, apiSchema: any = {}) => {
 
     return apiSchema;
   } catch (error) {
-    console.error(error);
+    console.error("SCHEMA_ERROR: ", error);
   }
 };
 

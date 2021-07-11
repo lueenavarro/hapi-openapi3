@@ -1,4 +1,4 @@
-import sinon, { mock } from "sinon";
+import sinon from "sinon";
 import { expect } from "chai";
 
 import schema from "./schema";
@@ -157,11 +157,7 @@ describe("schema.ts", () => {
     });
 
     it("should return undefined", () => {
-      expect(schema.traverse(null)).to.equal(undefined);
-    });
-
-    it("should return undefined", () => {
-      expect(schema.traverse(null)).to.equal(undefined);
+      expect(schema.traverse(null)).to.be.undefined;
     });
   });
 });
