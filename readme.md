@@ -66,10 +66,10 @@ Then open `/openapi.json`
   - required: true
 - `info` - info about the project
 
-  - type: info
+  - type: [info](#info)
 
 - `servers` - array of server URL
-  - type: server[]
+  - type: [server](#server)[]
 
 ### Route Options
 
@@ -87,15 +87,15 @@ See [examples](./examples/route-options.md)
 
 - `options.plugins["hapi-openapi3"].response.schema` - You can add examples here. You can also add your schema here
 
-  - type: responseOptions
+  - type: [responseOptions](#responseOptions)
 
 - `options.plugins["hapi-openapi3"].response.status` - You can add examples here per status code. You can also add your schema here
 
-  - type: object<string, responseOptions>
+  - type: object<string, [responseOptions](#responseOptions)>
 
 ### References:
 
-info:
+<h3 id="info">info:</h3>
 
 | field            | description              | type   | default            | required |
 | ---------------- | ------------------------ | ------ | ------------------ | -------- |
@@ -110,14 +110,14 @@ info:
 | `license.email`  | License Name             | string |                    | false    |
 | `license.url`    | License URL              | string |                    | false    |
 
-server:
+<h3 id="server">server:</h3>
 
 | field         | description     | type   | default      | required |
 | ------------- | --------------- | ------ | ------------ | -------- |
 | `url`         | Server URL      | string | <server_url> | true     |
 | `description` | Project Version | string |              | false    |
 
-responseOptions:
+<h3 id="responseOptions">responseOptions:</h3>
 
 | option     | description       | type                  | default | required |
 | ---------- | ----------------- | --------------------- | ------- | -------- |
