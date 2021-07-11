@@ -57,7 +57,7 @@ Then open `/openapi.json`
 
 - `jsonPath` - Path to open api 3 json definition
   - type: string
-  - default: `/openapi.json`
+  - default: /openapi.json
 - `pathPrefixSize` - selects what segment of the URL path is used to group endpoints
   - type: number
   - default: 1
