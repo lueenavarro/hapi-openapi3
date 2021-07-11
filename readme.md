@@ -10,7 +10,7 @@ npm install @lueenavarro/hapi-openapi3
 
 ## Basic setup
 
-```
+```javascript
 const hapiOpenApi3 = require("@lueenavarro/hapi-openapi3");
 const Hapi = require("hapi");
 const Joi = require("joi");
