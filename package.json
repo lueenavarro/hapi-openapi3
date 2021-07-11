@@ -5,6 +5,14 @@
   "files": [
     "dist/"
   ],
+  "types": "dist/bundle.d.ts",
+  "main": "dist/bundle.js",
+  "author": "Louie Navarro",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lueenavarro/hapi-openapi3.git"
+  },
   "scripts": {
     "prepare": "webpack --mode production",
     "build": "webpack --mode production",
@@ -13,10 +21,10 @@
     "test:watch": "npm run test -- --watch",
     "coverage": "nyc --reporter=lcov npm run test"
   },
-  "types": "dist/bundle.d.ts",
-  "main": "dist/bundle.js",
-  "author": "Louie Navarro",
-  "license": "ISC",
+  "dependencies": {
+    "joi": "^17.4.0",
+    "statuses": "^2.0.1"
+  },
   "devDependencies": {
     "@types/chai": "^4.2.21",
     "@types/expect": "^24.3.0",
@@ -36,10 +44,6 @@
     "webpack": "^5.42.0",
     "webpack-cli": "^4.7.2",
     "webpack-node-externals": "^3.0.0"
-  },
-  "dependencies": {
-    "joi": "^17.4.0",
-    "statuses": "^2.0.1"
   },
   "nyc": {
     "include": "src",
