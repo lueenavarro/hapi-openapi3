@@ -32,5 +32,6 @@ module.exports = {
     sourceMapFilename: "bundle.js.map",
     path: path.resolve(__dirname, "dist"),
     libraryTarget: "commonjs2",
+    clean: true,
   },
 };
