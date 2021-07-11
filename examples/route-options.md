@@ -1,6 +1,8 @@
+## Route Options Examples
+
 Defining schema in response.schema and adding examples in plugins
 
-```
+```javascript
 ...
 options: {
     validate: {
@@ -35,7 +37,7 @@ options: {
 
 Defining schema in response.status and adding examples in plugins
 
-```
+```javascript
 ...
 options: {
     validate: {
@@ -74,7 +76,7 @@ options: {
 
 Defining schema and adding examples in plugins response.schema. This will prevent hapi from validating your response
 
-```
+```javascript
 ...
 options: {
     validate: {
@@ -107,7 +109,7 @@ options: {
 
 Defining schema and adding examples in plugins response.status. This will prevent hapi from validating your response
 
-```
+```javascript
 ...
 options: {
     validate: {

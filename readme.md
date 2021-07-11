@@ -64,11 +64,11 @@ Then open `/openapi.json`
 - `includeFn` - function that determines if route will be included in open api definition
   - type: (route: RequestRoute) => boolean
   - required: true
-- `info` - Info about the projects
+- `info` - info about the project
 
   - type: info
 
-- `servers` - array of URL of servers
+- `servers` - array of server URL
   - type: server[]
 
 ### Route Options
@@ -96,18 +96,19 @@ See [examples](./examples/route-options.md)
 ### References:
 
 info:
-| field | description | type | default | required |
+
+| field            | description              | type   | default            | required |
 | ---------------- | ------------------------ | ------ | ------------------ | -------- |
-| `title` | Project Title | string | Documentation Page | true |
-| `version` | Project Version | string | 1.0.0 | false |
-| `description` | Project Description | string | | false |
-| `termsOfService` | Project Terms of Service | string | | false |
-| `termsOfService` | Project Terms of Service | string | | false |
-| `contact.name` | Contact Name | string | | false |
-| `contact.url` | Contact URL | string | | false |
-| `contact.email` | Contact Email | string | | false |
-| `license.email` | License Name | string | | false |
-| `license.url` | License URL | string | | false |
+| `title`          | Project Title            | string | Documentation Page | true     |
+| `version`        | Project Version          | string | 1.0.0              | false    |
+| `description`    | Project Description      | string |                    | false    |
+| `termsOfService` | Project Terms of Service | string |                    | false    |
+| `termsOfService` | Project Terms of Service | string |                    | false    |
+| `contact.name`   | Contact Name             | string |                    | false    |
+| `contact.url`    | Contact URL              | string |                    | false    |
+| `contact.email`  | Contact Email            | string |                    | false    |
+| `license.email`  | License Name             | string |                    | false    |
+| `license.url`    | License URL              | string |                    | false    |
 
 server:
 
