@@ -5,13 +5,13 @@ Generate OpenAPI 3 for Hapi. Inspired by hapi-swagger. Validators should be Joi.
 ## Installation
 
 ```
-npm install @lueenavarro/hapi-openapi3
+npm install hapi-openapi3
 ```
 
 ## Basic setup
 
 ```javascript
-const hapiOpenApi3 = require("@lueenavarro/hapi-openapi3");
+const hapiOpenApi3 = require("hapi-openapi3");
 const Hapi = require("hapi");
 const Joi = require("joi");
 
