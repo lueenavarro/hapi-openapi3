@@ -61,7 +61,7 @@ Then open `/openapi.json`
 - `pathPrefixSize` - selects what segment of the URL path is used to group endpoints. (type: number, default: 1)
 - `includeFn` - function that determines if route will be included in open api definition (type: (route: RequestRoute) => boolean, required: true)
 - `info` - info about the project (type: [info](#info))
-- `servers` - array of server URL, this will automatically be derived from hapi's server configuration if left blank (type: [server](#server)[])
+- `servers` - array of server URL, this will automatically be derived from hapi's server if left blank (type: [server](#server)[])
 
 ### Route Options
 
