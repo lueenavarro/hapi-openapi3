@@ -98,7 +98,7 @@ See [examples](./examples/route-options.md)
 | `url`         | Server URL      | string | <server_url> | true     |
 | `description` | Project Version | string |              | false    |
 
-<h4 id="requestOptions">responseOptions:</h4>
+<h4 id="requestOptions">requestOptions:</h4>
 
 | option     | description       | type                  | default | required |
 | ---------- | ----------------- | --------------------- | ------- | -------- |
