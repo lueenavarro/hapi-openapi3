@@ -9,18 +9,47 @@ describe("requestBody.ts", () => {
   beforeEach(() => sinon.restore());
 
   describe("get", () => {
-    it("should return request body", () => {
+    it("should return request body with examples", () => {
       const mockValidators = {
-        payload: Joi.object(),
+        validate: {
+          payload: Joi.object(),
+        },
+        plugins: {
+          "hapi-openapi3": {
+            request: { examples: { firstExample: {}, secondExample: null } },
+          },
+        },
       };
 
       sinon.stub(schema, "traverse").returns({ type: "object" });
 
       const result = requestBody.get(mockValidators);
+      const content = result.content["application/json"];
 
-      expect(result).to.eql({
-        content: { "application/json": { schema: { type: "object" } } },
-      });
+      expect(content.schema.type).to.equal("object");
+      expect(content.examples.firstExample).to.eql({});
+    });
+
+    it("should throw error on request option conflict", () => {
+      const mockValidators = {
+        plugins: {
+          "hapi-openapi3": {
+            request: {
+              examples: {},
+              example: {},
+            },
+          },
+        },
+      };
+
+      let error;
+      try {
+        requestBody.get(mockValidators);
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.an("error");
     });
 
     it("should return undefined", () => {

@@ -1,6 +1,7 @@
 import { Description, GetRuleOptions } from "joi";
 
 import _ from "./utilities";
+import logger from "./logger";
 
 const traverse = (joiDescription: Description, apiSchema: any = {}) => {
   if (!joiDescription) return undefined;
@@ -29,7 +30,7 @@ const traverse = (joiDescription: Description, apiSchema: any = {}) => {
 
     return apiSchema;
   } catch (error) {
-    console.error("SCHEMA_ERROR: ", error);
+    logger.error("SCHEMA_ERROR", error);
   }
 };
 
