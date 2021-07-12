@@ -1,6 +1,6 @@
 {
   "name": "hapi-openapi3",
-  "version": "1.0.3-alpha.5",
+  "version": "1.0.3-alpha.6",
   "description": "Generate OpenAPI 3.0.0 for Hapi",
   "files": [
     "dist/"
@@ -15,8 +15,6 @@
   },
   "scripts": {
     "publish": "npm publish --access public",
-    "publish:beta": "npm publish --access public --tag beta",
-    "publish:alpha": "npm publish --access public --tag alpha",
     "prepare": "npm run build",
     "build": "webpack --mode production",
     "build:watch": "webpack --mode development --watch --devtool eval-source-map",

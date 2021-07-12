@@ -30,7 +30,7 @@ export interface ServerPluginOptions {
   includeFn: (route: RequestRoute) => boolean;
 }
 
-export interface RequestOption {
+export interface RequestOptions {
   example?: any;
   examples?: Record<string, any>;
 }
@@ -43,7 +43,7 @@ export interface ResponseOptions {
 }
 
 export interface RoutePluginOptions {
-  request: RequestOption;
+  request: RequestOptions;
   response?: {
     schema?: ResponseOptions;
     status?: Record<string, ResponseOptions>;
