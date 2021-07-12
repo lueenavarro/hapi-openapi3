@@ -57,11 +57,11 @@ Then open `/openapi.json`
 
 ### Server Plugin Options
 
-- `jsonPath` - Path to open api 3 json definition (type: string, default: /openapi.json)
-- `pathPrefixSize` - selects what segment of the URL path is used to group endpoints (type: number, default: 1)
+- `jsonPath` - path to open api 3 json definition. (type: string, default: /openapi.json)
+- `pathPrefixSize` - selects what segment of the URL path is used to group endpoints. (type: number, default: 1)
 - `includeFn` - function that determines if route will be included in open api definition (type: (route: RequestRoute) => boolean, required: true)
 - `info` - info about the project (type: [info](#info))
-- `servers` - array of server URL (type: [server](#server)[])
+- `servers` - array of server URL, this will automatically be derived from hapi's server configuration if left blank (type: [server](#server)[])
 
 ### Route Options
 
