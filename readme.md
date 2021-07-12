@@ -70,6 +70,7 @@ See [examples](./examples/route-options.md)
 - `options.validate` - used by this plugin to define headers, params, query and payload schema (type: Hapi.RouteOptionsValidate)
 - `options.response.schema` - Schema of response, status code defaults to 200 (type: Joi.Schema)
 - `options.response.status` - schema of response per status code (type: object<string, Joi.schema>)
+- `options.plugins["hapi-openapi3"].request` - You can add examples here. (type: [requestOptions](#requestOptions))
 - `options.plugins["hapi-openapi3"].response.schema` - You can add examples here. You can also add your schema here (type: [responseOptions](#responseOptions))
 - `options.plugins["hapi-openapi3"].response.status` - You can add examples here per status code. You can also add your schema here (type: object<string, [responseOptions](#responseOptions)>)
 
@@ -96,6 +97,13 @@ See [examples](./examples/route-options.md)
 | ------------- | --------------- | ------ | ------------ | -------- |
 | `url`         | Server URL      | string | <server_url> | true     |
 | `description` | Project Version | string |              | false    |
+
+<h4 id="requestOptions">responseOptions:</h4>
+
+| option     | description       | type                  | default | required |
+| ---------- | ----------------- | --------------------- | ------- | -------- |
+| `example`  | Single Example    | any                   |         | false    |
+| `examples` | Multiple Examples | object\<string, any\> |         | false    |
 
 <h4 id="responseOptions">responseOptions:</h4>
 

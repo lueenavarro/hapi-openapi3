@@ -27,7 +27,7 @@ const get = (server: Server, options: ServerPluginOptions) => {
       const routeDetails = settings && {
         description: settings.description,
         parameters: parameters.get(settings.validate),
-        requestBody: requestBody.get(settings.validate),
+        requestBody: requestBody.get(settings),
         responses: response.get(settings) || defaultResponse,
       };
 

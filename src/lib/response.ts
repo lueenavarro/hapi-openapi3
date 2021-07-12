@@ -1,10 +1,11 @@
 import { RouteOptions, RouteOptionsResponse } from "hapi";
 import Joi, { isSchema, Schema, ValidationResult } from "joi";
 import status from "statuses";
-import { RoutePluginOptions } from "../types";
 
 import schema from "./schema";
+import logger from "./logger";
 import _ from "./utilities";
+import { RoutePluginOptions } from "../types";
 
 const mapExamples = (examples: any) =>
   _.mapObject(examples, (example: any) => ({
@@ -199,7 +200,7 @@ const validateResponseOptions = (
 
 const checkValidationResult = (result: ValidationResult) => {
   if (result.error) {
-    console.error("RESPONSE_ERROR: ", result.error.message);
+    logger.error("RESPONSE_PLUGIN_OPTION_ERROR", result.error.message);
     throw result.error;
   }
 };
