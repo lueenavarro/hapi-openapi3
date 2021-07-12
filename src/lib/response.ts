@@ -40,13 +40,14 @@ const mapResponseSchema = (
   const defaultStatusCode = 200;
   const responseSchema = schema.traverse(
     useCustom
-      ? pluginResponse.schema.schema?.describe()
+      ? pluginResponse.schema.payload?.describe()
       : (hapiResponse.schema as Schema).describe()
   );
 
   if (!responseSchema) return undefined;
   return {
     [defaultStatusCode]: {
+      headers: parseHeader(pluginResponse.schema.header),
       content: {
         "application/json": {
           schema: responseSchema,
@@ -68,6 +69,7 @@ const mapHapiResponseStatus = (
 
     response[code] = {
       description: status(code),
+      headers: parseHeader(pluginResponseOptions.header),
       content: {
         "application/json": {
           schema: schema.traverse((joiSchema as Schema).describe()),
@@ -90,10 +92,11 @@ const mapCustomResponseStatus = (
   const response = {};
   for (let [code, options] of Object.entries(pluginResponse.status)) {
     response[code] = {
+      headers: parseHeader(options.header),
       description: options.description || status(code),
       content: {
         "application/json": {
-          schema: schema.traverse(options.schema?.describe()),
+          schema: schema.traverse(options.payload?.describe()),
           example: options.example,
           examples: options.examples && mapExamples(options.examples),
         },
@@ -130,8 +133,11 @@ const validateResponseOptions = (
 
   const pluginOptionValidator = (schemaErrorMessage: string) =>
     Joi.object({
-      schema: Joi.custom((value, helper) =>
-        isJoiSchema(value, helper, schemaErrorMessage)
+      header: Joi.custom((value, helper) =>
+        isJoiSchema(value, helper, "header" + schemaErrorMessage)
+      ),
+      payload: Joi.custom((value, helper) =>
+        isJoiSchema(value, helper, "payload" + schemaErrorMessage)
       ),
       description: Joi.string(),
       example: Joi.any(),
@@ -153,13 +159,10 @@ const validateResponseOptions = (
         ),
     }).without("schema", "status"),
     pluginResponse: Joi.object({
-      schema: pluginOptionValidator("plugin schema is not a joi schema"),
+      schema: pluginOptionValidator("plugin is not a joi schema"),
       status: Joi.object()
         .unknown()
-        .pattern(
-          /^/,
-          pluginOptionValidator("plugin status schema is not a schema")
-        ),
+        .pattern(/^/, pluginOptionValidator("plugin status is not a schema")),
     }).without("schema", "status"),
   });
 
@@ -167,7 +170,7 @@ const validateResponseOptions = (
   checkValidationResult(validatorResult);
 
   const schemaValidator = Joi.object()
-    .oxor("response.schema", "pluginResponse.schema.schema")
+    .oxor("response.schema", "pluginResponse.schema.payload")
     .when(
       Joi.object().or(
         "pluginResponse.schema.example",
@@ -176,7 +179,7 @@ const validateResponseOptions = (
       {
         then: Joi.object().or(
           "response.schema",
-          "pluginResponse.schema.schema"
+          "pluginResponse.schema.payload"
         ),
       }
     );
@@ -186,7 +189,7 @@ const validateResponseOptions = (
   const statusValidator = (statusCode: string) =>
     Joi.object().oxor(
       `response.status.${statusCode}`,
-      `pluginResponse.status.${statusCode}.schema`
+      `pluginResponse.status.${statusCode}.payload`
     );
 
   if (pluginResponse.status) {
@@ -203,6 +206,24 @@ const checkValidationResult = (result: ValidationResult) => {
     logger.error("RESPONSE_PLUGIN_OPTION_ERROR", result.error.message);
     throw result.error;
   }
+};
+
+const parseHeader = (headerSchema: Schema) => {
+  if (!headerSchema) return undefined;
+
+  const headerDescription = headerSchema.describe();
+  if (headerDescription.type !== "object") {
+    const errorMessage = "header schema is not of type object";
+    logger.error("RESPONSE_PLUGIN_OPTION_ERROR", errorMessage);
+    throw new Error(errorMessage);
+  }
+
+  const headerProperties = headerSchema.describe().keys;
+  if (!headerProperties) return undefined;
+
+  return _.mapObject(headerProperties, (value) => ({
+    schema: schema.traverse(value),
+  }));
 };
 
 export default {

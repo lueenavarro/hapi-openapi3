@@ -36,7 +36,8 @@ export interface RequestOptions {
 }
 
 export interface ResponseOptions {
-  schema?: Schema;
+  header?: Schema;
+  payload?: Schema;
   description?: string;
   example?: any;
   examples?: Record<string, any>;
@@ -45,6 +46,7 @@ export interface ResponseOptions {
 export interface RoutePluginOptions {
   request: RequestOptions;
   response?: {
+    headerSchema: Schema;
     schema?: ResponseOptions;
     status?: Record<string, ResponseOptions>;
   };

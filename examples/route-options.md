@@ -74,7 +74,7 @@ options: {
 }
 ```
 
-Defining schema and adding examples in plugins response.schema. This will prevent hapi from validating your response
+Defining payload schema and adding examples in plugins response.schema. This will prevent hapi from validating your response
 
 ```javascript
 ...
@@ -88,7 +88,7 @@ options: {
         "hapi-openapi3": {
             response: {
                 schema: {
-                    schema: Joi.object({
+                    payload: Joi.object({
                         createdAt: Joi.date().iso()
                         updatedAt: Joi.date().iso()
                     }),
@@ -107,7 +107,7 @@ options: {
 }
 ```
 
-Defining schema and adding examples in plugins response.status. This will prevent hapi from validating your response
+Defining payload schema and adding examples in plugins response.status. This will prevent hapi from validating your response
 
 ```javascript
 ...
@@ -122,7 +122,7 @@ options: {
             response: {
                 status: {
                     200: {
-                        schema: Joi.object({
+                        payload: Joi.object({
                             createdAt: Joi.date().iso()
                             updatedAt: Joi.date().iso()
                         }),
