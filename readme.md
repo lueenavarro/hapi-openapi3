@@ -107,8 +107,9 @@ See [examples](./examples/route-options.md)
 
 <h4 id="responseOptions">responseOptions:</h4>
 
-| option     | description       | type                  | default | required |
-| ---------- | ----------------- | --------------------- | ------- | -------- |
-| `schema`   | Joi Schema        | string                |         | false    |
-| `example`  | Single Example    | any                   |         | false    |
-| `examples` | Multiple Examples | object\<string, any\> |         | false    |
+| option     | description           | type                  | default | required |
+| ---------- | --------------------- | --------------------- | ------- | -------- |
+| `header`   | Joi Schema of Header  | string                |         | false    |
+| `payload`  | Joi Schema of Payload | string                |         | false    |
+| `example`  | Single Example        | any                   |         | false    |
+| `examples` | Multiple Examples     | object\<string, any\> |         | false    |

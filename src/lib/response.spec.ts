@@ -38,7 +38,7 @@ describe("response.ts", () => {
           "hapi-openapi3": {
             response: {
               schema: {
-                schema: Joi.object(),
+                payload: Joi.object(),
                 example: {},
               },
             },
@@ -91,7 +91,10 @@ describe("response.ts", () => {
             response: {
               status: {
                 201: {
-                  schema: Joi.object(),
+                  header: Joi.object({
+                    responseTime: Joi.date().iso(),
+                  }),
+                  payload: Joi.object(),
                   examples: {
                     firstExample: {},
                     secondExample: null,
@@ -104,8 +107,14 @@ describe("response.ts", () => {
       };
 
       const result = response.get(mockRouteOption);
+      const header = _.get(result, ["201", "headers"]);
+      console.log(header);
       const content = _.get(result, ["201", "content", "application/json"]);
 
+      expect(header.responseTime.schema).to.eql({
+        type: "string",
+        format: "date-time",
+      });
       expect(content.schema.type).to.equal("object");
       expect(content.examples.firstExample.value).to.eql({});
       expect(content.examples.secondExample.value).to.equal(null);
@@ -120,7 +129,7 @@ describe("response.ts", () => {
           "hapi-openapi3": {
             response: {
               schema: {
-                schema: Joi.object(),
+                payload: Joi.object(),
                 example: {},
               },
             },
@@ -144,11 +153,11 @@ describe("response.ts", () => {
           "hapi-openapi3": {
             response: {
               schema: {
-                schema: Joi.object(),
+                payload: Joi.object(),
               },
               status: {
                 201: {
-                  schema: Joi.number(),
+                  payload: Joi.number(),
                 },
               },
             },
@@ -178,7 +187,7 @@ describe("response.ts", () => {
             response: {
               status: {
                 201: {
-                  schema: Joi.number(),
+                  payload: Joi.number(),
                 },
               },
             },
@@ -187,6 +196,33 @@ describe("response.ts", () => {
       };
 
       let error: any;
+      try {
+        response.get(mockRouteOption);
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error).to.be.an("error");
+    });
+
+    it("should throw error if header is not object schema", () => {
+      const mockRouteOption: any = {
+        plugins: {
+          "hapi-openapi3": {
+            response: {
+              status: {
+                200: {
+                  header: Joi.array().items({
+                    responseTime: Joi.date().iso(),
+                  }),
+                },
+              },
+            },
+          },
+        },
+      };
+
+      let error;
       try {
         response.get(mockRouteOption);
       } catch (err) {
