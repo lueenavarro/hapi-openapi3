@@ -3,8 +3,8 @@ import { Schema } from "joi";
 
 export interface Info {
   title: string;
+  version: string;
   description?: string;
-  version?: string;
   termsOfService?: string;
   contact?: {
     name?: string;
