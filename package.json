@@ -1,6 +1,6 @@
 {
   "name": "hapi-openapi3",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Generate OpenAPI 3.0.0 for Hapi",
   "files": [
     "dist/"
