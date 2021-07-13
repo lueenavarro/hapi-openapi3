@@ -81,7 +81,7 @@ See [examples](./examples/route-options.md)
 | field            | description              | type   | default            | required |
 | ---------------- | ------------------------ | ------ | ------------------ | -------- |
 | `title`          | Project Title            | string | Documentation Page | true     |
-| `version`        | Project Version          | string | 1.0.0              | false    |
+| `version`        | Project Version          | string | 1.0.0              | true     |
 | `description`    | Project Description      | string |                    | false    |
 | `termsOfService` | Project Terms of Service | string |                    | false    |
 | `termsOfService` | Project Terms of Service | string |                    | false    |
