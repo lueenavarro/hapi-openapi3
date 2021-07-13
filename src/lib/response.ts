@@ -1,5 +1,5 @@
 import { RouteOptions, RouteOptionsResponse } from "hapi";
-import Joi, { isSchema, Schema, ValidationResult } from "joi";
+import Joi, { Schema, ValidationResult } from "joi";
 import status from "statuses";
 
 import schema from "./schema";
@@ -124,7 +124,7 @@ const validateResponseOptions = (
   };
 
   const isJoiSchema = (value: any, helper: any, message: string) => {
-    if (!isSchema(value)) {
+    if (!(value instanceof Joi.constructor)) {
       return helper.message(message);
     }
 
@@ -159,10 +159,13 @@ const validateResponseOptions = (
         ),
     }).without("schema", "status"),
     pluginResponse: Joi.object({
-      schema: pluginOptionValidator("plugin is not a joi schema"),
+      schema: pluginOptionValidator("pluginReponse is not a joi schema"),
       status: Joi.object()
         .unknown()
-        .pattern(/^/, pluginOptionValidator("plugin status is not a schema")),
+        .pattern(
+          /^/,
+          pluginOptionValidator("pluginResponse.status is not a schema")
+        ),
     }).without("schema", "status"),
   });
 
