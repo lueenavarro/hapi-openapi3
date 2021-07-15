@@ -62,7 +62,8 @@ Then open `/openapi.json`
 - `pathPrefixSize` - selects what segment of the URL path is used to group endpoints. (type: number, default: 1)
 - `singleSchemaInParams` - ignores parameters (header, params, query) that cannot be parsed to a single schema. (type: boolean, default: false)
 - `info` - info about the project (type: [info](#info))
-- `servers` - array of server URL, this will automatically be derived from hapi's server object if left blank (type: [server](#server)[])
+- `serversFn` - function that provides url and must return array of server URL (type: (url: string) => [server](#server)[])
+- `servers` - array of server URL, this will automatically be derived from hapi's server object if left blank. Ignored if serversFn is provided (type: [server](#server)[])
 
 ### Route Options
 
