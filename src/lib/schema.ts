@@ -3,7 +3,11 @@ import { Description, GetRuleOptions } from "joi";
 import _ from "./utilities";
 import logger from "./logger";
 
-const traverse = (joiDescription: Description, apiSchema: any = {}) => {
+const traverse = (
+  joiDescription: Description,
+  ignoreAlternatives = false,
+  apiSchema: any = {}
+) => {
   if (!joiDescription) return undefined;
 
   try {
@@ -19,7 +23,7 @@ const traverse = (joiDescription: Description, apiSchema: any = {}) => {
       apiSchema.type = joiDescription.type;
       parseArray(joiDescription, apiSchema);
       parseRules(joiDescription, apiSchema);
-    } else if (joiDescription.type === "alternatives") {
+    } else if (joiDescription.type === "alternatives" && !ignoreAlternatives) {
       for (let match of joiDescription.matches) {
         apiSchema.anyOf = apiSchema.anyOf || [];
         match.then && apiSchema.anyOf.push(traverse(match.then));

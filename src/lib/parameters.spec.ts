@@ -113,7 +113,6 @@ describe("parameters.ts", () => {
       sinon.stub(schema, "isRequired").returns(true);
 
       const result = parameters.get(mockValidators, mockOption);
-
       expect(result).to.equal(undefined);
     });
   });

@@ -30,13 +30,13 @@ const mapParameters = (
     return Object.entries(joiDescription.keys).map(([key, subDescription]) => ({
       in: paramIn,
       name: key,
-      schema: schema.traverse(subDescription),
+      schema: schema.traverse(
+        subDescription,
+        options.ignoreAlternativesInParams
+      ),
       required: schema.isRequired(subDescription),
     }));
-  } else if (
-    joiDescription.type === "alternatives" &&
-    !options.ignoreAlternativesInParams
-  ) {
+  } else if (joiDescription.type === "alternatives") {
     const collector: any[] = [];
     for (let match of joiDescription.matches) {
       collector.push(...mapParameters(match.then, paramIn, options));
@@ -62,6 +62,8 @@ const mapParameters = (
             duplicate.processed = true;
             return duplicate.schema;
           });
+
+          if (options.ignoreAlternativesInParams) return undefined;
 
           param.schema = {
             anyOf: [param.schema].concat(duplicatesSchema),
