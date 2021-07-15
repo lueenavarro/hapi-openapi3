@@ -22,15 +22,10 @@ describe("parameters.ts", () => {
         }),
       };
 
-      const mockOption = {
-        singleSchemaInParams: false,
-        includeFn: () => true,
-      };
-
       sinon.stub(schema, "traverse").returns({ type: "string" });
       sinon.stub(schema, "isRequired").returns(true);
 
-      const result = parameters.get(mockValidators, mockOption);
+      const result = parameters.get(mockValidators, false);
 
       expect(result[0]).to.eql({
         in: "header",
