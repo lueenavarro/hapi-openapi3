@@ -156,6 +156,17 @@ describe("schema.ts", () => {
       ]);
     });
 
+    it("should ignore alternatives", () => {
+      const mockAlteratives = Joi.alternatives(Joi.string(), Joi.number())
+        .conditional(Joi.object({}), {
+          then: Joi.date().iso(),
+          otherwise: Joi.string(),
+        })
+        .describe();
+      const alternativeResults = schema.traverse(mockAlteratives, true);
+      expect(alternativeResults).to.eql({});
+    });
+
     it("should return undefined", () => {
       expect(schema.traverse(null)).to.be.undefined;
     });

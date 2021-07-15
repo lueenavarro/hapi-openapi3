@@ -23,7 +23,7 @@ describe("parameters.ts", () => {
       };
 
       const mockOption = {
-        ignoreAlternativesInParams: false,
+        singleSchemaInParams: false,
         includeFn: () => true,
       };
 
@@ -71,7 +71,7 @@ describe("parameters.ts", () => {
       };
 
       const mockOption = {
-        ignoreAlternativesInParams: false,
+        singleSchemaInParams: false,
         includeFn: () => true,
       };
 
@@ -106,7 +106,7 @@ describe("parameters.ts", () => {
       };
 
       const mockOption = {
-        ignoreAlternativesInParams: true,
+        singleSchemaInParams: true,
         includeFn: () => true,
       };
 

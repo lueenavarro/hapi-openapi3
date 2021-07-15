@@ -30,10 +30,7 @@ const mapParameters = (
     return Object.entries(joiDescription.keys).map(([key, subDescription]) => ({
       in: paramIn,
       name: key,
-      schema: schema.traverse(
-        subDescription,
-        options.ignoreAlternativesInParams
-      ),
+      schema: schema.traverse(subDescription, options.singleSchemaInParams),
       required: schema.isRequired(subDescription),
     }));
   } else if (joiDescription.type === "alternatives") {
@@ -63,7 +60,7 @@ const mapParameters = (
             return duplicate.schema;
           });
 
-          if (options.ignoreAlternativesInParams) return undefined;
+          if (options.singleSchemaInParams) return undefined;
 
           param.schema = {
             anyOf: [param.schema].concat(duplicatesSchema),

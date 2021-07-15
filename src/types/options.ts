@@ -27,7 +27,7 @@ export interface ServerPluginOptions {
   servers?: ServersURL[];
   jsonPath?: string;
   pathPrefixSize?: number;
-  ignoreAlternativesInParams?: boolean;
+  singleSchemaInParams?: boolean;
   includeFn: (route: RequestRoute) => boolean;
 }
 

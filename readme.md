@@ -60,7 +60,7 @@ Then open `/openapi.json`
 - `includeFn` - function that determines if route will be included in open api definition (type: (route: RequestRoute) => boolean, required: true)
 - `jsonPath` - path to open api 3 json definition. (type: string, default: /openapi.json)
 - `pathPrefixSize` - selects what segment of the URL path is used to group endpoints. (type: number, default: 1)
-- `ignoreAlternativesInParams` - ignores parameters (header, params, query) with type 'alternative'. (type: boolean, default: false)
+- `singleSchemaInParams` - ignores parameters (header, params, query) that cannot be parsed to a single schema. (type: boolean, default: false)
 - `info` - info about the project (type: [info](#info))
 - `servers` - array of server URL, this will automatically be derived from hapi's server object if left blank (type: [server](#server)[])
 
