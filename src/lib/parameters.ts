@@ -3,12 +3,16 @@ import { Description, Schema } from "joi";
 
 import schema from "./schema";
 import _ from "./utilities";
+import { ServerPluginOptions } from "../types";
 
-export const get = (validators: RouteOptionsValidate) => {
+export const get = (
+  validators: RouteOptionsValidate,
+  options: ServerPluginOptions
+) => {
   const parameters = [
-    ...mapParameters(describeSchema(validators.headers), "header"),
-    ...mapParameters(describeSchema(validators.query), "query"),
-    ...mapParameters(describeSchema(validators.params), "path"),
+    ...mapParameters(describeSchema(validators.headers), "header", options),
+    ...mapParameters(describeSchema(validators.query), "query", options),
+    ...mapParameters(describeSchema(validators.params), "path", options),
   ];
 
   if (parameters.length === 0) return undefined;
@@ -16,7 +20,11 @@ export const get = (validators: RouteOptionsValidate) => {
   return parameters;
 };
 
-const mapParameters = (joiDescription: Description, paramIn: string) => {
+const mapParameters = (
+  joiDescription: Description,
+  paramIn: string,
+  options: ServerPluginOptions
+) => {
   if (!joiDescription) return [];
   if (joiDescription.type === "object") {
     return Object.entries(joiDescription.keys).map(([key, subDescription]) => ({
@@ -25,12 +33,15 @@ const mapParameters = (joiDescription: Description, paramIn: string) => {
       schema: schema.traverse(subDescription),
       required: schema.isRequired(subDescription),
     }));
-  } else if (joiDescription.type === "alternatives") {
+  } else if (
+    joiDescription.type === "alternatives" &&
+    !options.ignoreAlternativesInParams
+  ) {
     const collector: any[] = [];
     for (let match of joiDescription.matches) {
-      collector.push(...mapParameters(match.then, paramIn));
-      collector.push(...mapParameters(match.otherwise, paramIn));
-      collector.push(...mapParameters(match.schema, paramIn));
+      collector.push(...mapParameters(match.then, paramIn, options));
+      collector.push(...mapParameters(match.otherwise, paramIn, options));
+      collector.push(...mapParameters(match.schema, paramIn, options));
     }
 
     // remove params that are exactly the same

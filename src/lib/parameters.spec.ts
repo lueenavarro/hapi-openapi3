@@ -22,10 +22,15 @@ describe("parameters.ts", () => {
         }),
       };
 
+      const mockOption = {
+        ignoreAlternativesInParams: false,
+        includeFn: () => true,
+      };
+
       sinon.stub(schema, "traverse").returns({ type: "string" });
       sinon.stub(schema, "isRequired").returns(true);
 
-      const result = parameters.get(mockValidators);
+      const result = parameters.get(mockValidators, mockOption);
 
       expect(result[0]).to.eql({
         in: "header",
@@ -65,12 +70,17 @@ describe("parameters.ts", () => {
         ),
       };
 
+      const mockOption = {
+        ignoreAlternativesInParams: false,
+        includeFn: () => true,
+      };
+
       const traverseStube = sinon.stub(schema, "traverse");
       traverseStube.onCall(0).returns({ type: "string" });
       traverseStube.onCall(1).returns({ type: "number" });
       sinon.stub(schema, "isRequired").returns(true);
 
-      const result = parameters.get(mockValidators);
+      const result = parameters.get(mockValidators, mockOption);
 
       expect(result).to.eql([
         {
@@ -81,6 +91,30 @@ describe("parameters.ts", () => {
         },
       ]);
       expect(result.every((param) => param.required)).to.equal(false);
+    });
+
+    it("should ignore params of type alternatives", () => {
+      const mockValidators = {
+        query: Joi.alternatives(
+          Joi.object({
+            x: Joi.string(),
+          }),
+          Joi.object({
+            x: Joi.number(),
+          })
+        ),
+      };
+
+      const mockOption = {
+        ignoreAlternativesInParams: true,
+        includeFn: () => true,
+      };
+
+      sinon.stub(schema, "isRequired").returns(true);
+
+      const result = parameters.get(mockValidators, mockOption);
+
+      expect(result).to.equal(undefined);
     });
   });
 });
