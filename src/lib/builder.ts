@@ -2,11 +2,15 @@ import { Request } from "hapi";
 import { ServerPluginOptions } from "../types";
 import paths from "./paths";
 
+import _ from "./utilities";
+
 const builder = (request: Request, options: ServerPluginOptions) => {
   return {
     openapi: "3.0.0",
     info: options.info,
-    servers: options.servers || [{ url: getUrl(request) }],
+    servers: options.serversFn
+      ? options.serversFn(getUrl(request))
+      : options.servers || [{ url: getUrl(request) }],
     paths: paths.get(request.server, options),
   };
 };

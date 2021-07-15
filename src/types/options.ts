@@ -25,6 +25,7 @@ export interface ServersURL {
 export interface ServerPluginOptions {
   info?: Info;
   servers?: ServersURL[];
+  serversFn?: (host: string) => ServersURL[];
   jsonPath?: string;
   pathPrefixSize?: number;
   singleSchemaInParams?: boolean;

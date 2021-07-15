@@ -16,6 +16,7 @@ describe("builder.ts", () => {
       const mockOptions = {
         info: {
           title: "Mock Title",
+          version: "1.0.0",
         },
         servers: [],
         includeFn: () => true,
@@ -44,6 +45,27 @@ describe("builder.ts", () => {
       const result = builder(mockRequest, {} as any);
 
       expect(result.servers).to.eql([{ url: "http://localhost:4000" }]);
+    });
+
+    it("should give host when using serversFn option", () => {
+      const mockRequest: any = {
+        headers: {},
+        server: { info: { protocol: "http" } },
+        info: {
+          host: "localhost:4000",
+        },
+      };
+
+      sinon.stub(paths, "get").resolves([]);
+
+      const result = builder(mockRequest, {
+        serversFn: (url) => [{ url: url + "/basePath" }],
+        includeFn: () => true,
+      });
+
+      expect(result.servers).to.eql([
+        { url: "http://localhost:4000/basePath" },
+      ]);
     });
 
     it("should use x-forwarded-proto ", () => {
