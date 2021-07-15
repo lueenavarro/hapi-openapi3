@@ -70,17 +70,12 @@ describe("parameters.ts", () => {
         ),
       };
 
-      const mockOption = {
-        singleSchemaInParams: false,
-        includeFn: () => true,
-      };
-
       const traverseStube = sinon.stub(schema, "traverse");
       traverseStube.onCall(0).returns({ type: "string" });
       traverseStube.onCall(1).returns({ type: "number" });
       sinon.stub(schema, "isRequired").returns(true);
 
-      const result = parameters.get(mockValidators, mockOption);
+      const result = parameters.get(mockValidators, false);
 
       expect(result).to.eql([
         {
@@ -105,14 +100,9 @@ describe("parameters.ts", () => {
         ),
       };
 
-      const mockOption = {
-        singleSchemaInParams: true,
-        includeFn: () => true,
-      };
-
       sinon.stub(schema, "isRequired").returns(true);
 
-      const result = parameters.get(mockValidators, mockOption);
+      const result = parameters.get(mockValidators, true);
       expect(result).to.equal(undefined);
     });
   });

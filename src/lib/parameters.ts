@@ -3,16 +3,19 @@ import { Description, Schema } from "joi";
 
 import schema from "./schema";
 import _ from "./utilities";
-import { ServerPluginOptions } from "../types";
 
 export const get = (
   validators: RouteOptionsValidate,
-  options: ServerPluginOptions
+  singleSchema: boolean
 ) => {
   const parameters = [
-    ...mapParameters(describeSchema(validators.headers), "header", options),
-    ...mapParameters(describeSchema(validators.query), "query", options),
-    ...mapParameters(describeSchema(validators.params), "path", options),
+    ...mapParameters(
+      describeSchema(validators.headers),
+      "header",
+      singleSchema
+    ),
+    ...mapParameters(describeSchema(validators.query), "query", singleSchema),
+    ...mapParameters(describeSchema(validators.params), "path", singleSchema),
   ];
 
   if (parameters.length === 0) return undefined;
@@ -23,22 +26,22 @@ export const get = (
 const mapParameters = (
   joiDescription: Description,
   paramIn: string,
-  options: ServerPluginOptions
+  singleSchema: boolean
 ) => {
   if (!joiDescription) return [];
   if (joiDescription.type === "object") {
     return Object.entries(joiDescription.keys).map(([key, subDescription]) => ({
       in: paramIn,
       name: key,
-      schema: schema.traverse(subDescription, options.singleSchemaInParams),
+      schema: schema.traverse(subDescription, singleSchema),
       required: schema.isRequired(subDescription),
     }));
   } else if (joiDescription.type === "alternatives") {
     const collector: any[] = [];
     for (let match of joiDescription.matches) {
-      collector.push(...mapParameters(match.then, paramIn, options));
-      collector.push(...mapParameters(match.otherwise, paramIn, options));
-      collector.push(...mapParameters(match.schema, paramIn, options));
+      collector.push(...mapParameters(match.then, paramIn, singleSchema));
+      collector.push(...mapParameters(match.otherwise, paramIn, singleSchema));
+      collector.push(...mapParameters(match.schema, paramIn, singleSchema));
     }
 
     // remove params that are exactly the same
@@ -60,7 +63,7 @@ const mapParameters = (
             return duplicate.schema;
           });
 
-          if (options.singleSchemaInParams) return undefined;
+          if (singleSchema) return undefined;
 
           param.schema = {
             anyOf: [param.schema].concat(duplicatesSchema),
