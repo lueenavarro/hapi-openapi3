@@ -58,6 +58,7 @@ Then open `/openapi.json`
 ### Server Plugin Options
 
 - `includeFn` - function that determines if route will be included in open api definition (type: (route: RequestRoute) => boolean, required: true)
+- `pathFn` - function that provides path and must return a new path (type: (path: string) => string))
 - `jsonPath` - path to open api 3 json definition. (type: string, default: /openapi.json)
 - `pathPrefixSize` - selects what segment of the URL path is used to group endpoints. (type: number, default: 1)
 - `singleSchemaInParams` - ignores parameters (header, params, query) that cannot be parsed to a single schema. (type: boolean, default: false)

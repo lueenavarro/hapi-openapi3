@@ -17,6 +17,7 @@ const get = (server: Server, options: ServerPluginOptions) => {
     .table()
     .filter((route) => isRouteIncluded(route, options))
     .forEach((route) => {
+      route.path = options.pathFn ? options.pathFn(route.path) : route.path;
       paths[route.path] = paths[route.path] || {};
 
       const routeTags = {

@@ -13,13 +13,11 @@ describe("paths.ts", () => {
   describe("get", () => {
     it("should return paths", () => {
       const mockServer: any = {
-        table: () => {
-          return [
-            { path: "/first-route", method: "get" },
-            { path: "/first-route", method: "post" },
-            { path: "/second-route", method: "get" },
-          ];
-        },
+        table: () => [
+          { path: "/first-route", method: "get" },
+          { path: "/first-route", method: "post" },
+          { path: "/second-route", method: "get" },
+        ],
       };
       const mockOptions = {
         includeFn: () => true,
@@ -39,6 +37,25 @@ describe("paths.ts", () => {
       });
       expect(result["/first-route"].post.tags).to.eql(["first-route"]);
       expect(result["/second-route"].get.tags).to.eql(["second-route"]);
+    });
+
+    it("should return modified paths", () => {
+      const mockServer: any = {
+        table: () => [{ path: "/first-route", method: "get" }],
+      };
+
+      const mockOptions = {
+        includeFn: () => true,
+        pathFn: (path: string) => "/basePath" + path,
+        pathPrefixSize: 2,
+      };
+
+      sinon.stub(parameters, "get").returns(undefined);
+      sinon.stub(requestBody, "get").returns(undefined);
+      sinon.stub(response, "get").returns(undefined);
+
+      const result = paths.get(mockServer, mockOptions);
+      expect(result["/basePath/first-route"]).to.be.an("object");
     });
 
     it("should add properties when route.settings is present", () => {

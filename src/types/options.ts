@@ -29,6 +29,7 @@ export interface ServerPluginOptions {
   jsonPath?: string;
   pathPrefixSize?: number;
   singleSchemaInParams?: boolean;
+  pathFn?: (path: string) => string;
   includeFn: (route: RequestRoute) => boolean;
 }
 
