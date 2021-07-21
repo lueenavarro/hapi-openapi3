@@ -93,7 +93,10 @@ const parseRules = (joiDescription: Description, apiSchema: any) => {
 
   const rulesMap = mapRules(joiDescription.rules);
   const patterRule = rulesMap["pattern"];
-  if (patterRule) apiSchema.pattern = patterRule.args.regex;
+  if (patterRule)
+    apiSchema.pattern = patterRule.args.regex
+      .replace(/^\//, "")
+      .replace(/\/$/, "");
   const minRule = rulesMap["min"];
   if (minRule) {
     if (apiSchema.type === "string") apiSchema.minLength = minRule.args.limit;
